@@ -3,46 +3,50 @@ import "./globals.css";
 import { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Navbar from "@/components/layout/Navbar";
 
 const fontHeading = DM_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-heading",
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-heading",
 });
 
 const fontBody = DM_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-body",
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-body",
 });
 
 const dmsans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "500", "600", "700", "800", "900"],
+    subsets: ["latin"],
+    weight: ["300", "400", "500", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Placement Portal",
-  description: "TPC",
+    title: "Placement Portal",
+    description: "TPC",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html suppressHydrationWarning lang="en">
-      <body
-        className={cn(
-          "antialiased min-h-screen relative",
-          fontHeading.variable,
-          fontBody.variable,
-          dmsans.className
-        )}
-      >
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html suppressHydrationWarning lang="en">
+            <body
+                className={cn(
+                    "relative gap-2 max-w-screen-xl mx-auto flex flex-col px-2 py-4 justify-between",
+                    fontHeading.variable,
+                    fontBody.variable,
+                    dmsans.className
+                )}
+            >
+                <Navbar />
+                <main className="mt-4">
+                    {children}
+                </main>
+            </body>
+        </html>
+    );
 }
