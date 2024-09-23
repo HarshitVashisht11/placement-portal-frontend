@@ -55,13 +55,13 @@ const Navbar = () => {
                 </div>
             </Link>
             <div className="flex gap-6 items-center justify-center">
-                <NavLink href="/" label="Jobs">
+                <NavLink href="/jobs" label="Jobs">
                     <BriefcaseBusiness color="black" size={19} />
                 </NavLink>
-                <NavLink href="/" label="Forum">
+                <NavLink href="/forum" label="Forum">
                     <MessageSquareQuote color="black" size={19} />
                 </NavLink>
-                <NavLink href="/" label="Pofile">
+                <NavLink href="/user/profile" label="Pofile">
                     <UserRound color="black" size={19} />
                 </NavLink>
             </div>
