@@ -13,7 +13,12 @@ const Profile = () => {
             <section className='border-b rounded-lg'>
                 <div className='relative w-full h-[150px] rounded-lg bg-gradient-to-tr' style={{ backgroundImage: 'linear-gradient(45deg, #93c5fd, #6ee7b7)' }}>
                     <div className='absolute size-36 -bottom-14 left-5 rounded-full border-4 border-white bg-black'>
-                        <img src="" alt="Avatar" className='w-full h-full aspect-square rounded-full'>
+                        <img width={500}
+                            height={500}
+                            src="https://api.dicebear.com/9.x/initials/svg?seed=Kanishk"
+                            alt="Avatar"
+                            className='w-full h-full aspect-square rounded-full'
+                        >
                         </img>
                     </div>
                 </div>
