@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/layout/Navbar";
+import { Toaster } from "react-hot-toast";
 
 const fontHeading = DM_Sans({
   subsets: ["latin"],
@@ -41,9 +42,12 @@ export default function RootLayout({
           dmsans.className
         )}
       >
-        <div className={`relative gap-2 max-w-screen-xl mx-auto flex flex-col px-2 justify-between min-h-screen`}>
+        <div
+          className={`relative gap-2 max-w-screen-xl mx-auto flex flex-col px-2 justify-between min-h-screen`}
+        >
           <Navbar />
           <main className="">{children}</main>
+          <Toaster position="bottom-center" />
         </div>
       </body>
     </html>
