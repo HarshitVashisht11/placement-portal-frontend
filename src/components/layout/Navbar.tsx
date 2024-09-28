@@ -1,27 +1,30 @@
 "use client";
 
 import {
-    AlarmClockCheck,
-    Bookmark,
     BriefcaseBusiness,
-    CircleCheckBig,
-    Github,
-    LoaderPinwheel,
     MessageSquareQuote,
-    Notebook,
-    Palette,
-    Plus,
     UserRound,
 } from "lucide-react";
-import Icon from "../Icon";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname} from "next/navigation";
 import Link from "next/link";
 import NavLink from "../Navlink";
 
 const Navbar = () => {
-    const router = useRouter();
-    const [open, setOpen] = useState(false);
+    // const [open, setOpen] = useState(false);
+
+    const pathname = usePathname();
+    // const [path, setpath] = useState({
+    //   pathname: "/auth/login",
+    //   text: "Login",
+    // });
+
+    if (
+      pathname === "/auth/login" ||
+      pathname === "/auth/register" ||
+      pathname === "/dashboard"
+    ) {
+      return null;
+    }
 
     // const logout = async () => {
     //     try {

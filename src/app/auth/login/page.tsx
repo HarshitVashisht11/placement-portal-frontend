@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { GraduationCap } from "lucide-react";
 import { LoginSchema } from "@/schemas/schema";
+import { api } from "@/lib/api";
 
 const Login = () => {
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -23,26 +24,18 @@ const Login = () => {
     });
 
     async function onSubmit(data: z.infer<typeof LoginSchema>) {
-        // try {
-        //   const response = await api.post("/auth/login", {
-        //     email: data.email,
-        //     password: data.password,
-        //   });
+        try {
+          const response = await api.post("/login", {
+            email: data.email,
+            password: data.password,
+          });
 
-        //   const xsrfToken = response.headers["x-csrf-token"];
-        //   setxcsrfToken(xsrfToken);
-        //   const callback = searchParams.get("callback");
-        //   if (callback) {
-        //     router.replace(`/${callback}`);
-        //   } else {
-        //     router.replace("/");
-        //   }
-        // } catch (error: any) {
-        //   console.log(error);
-        // }
-
-        console.log(data);
+          console.log(response.data)
+        } catch (error) {
+          console.log(error);
+        }
     }
+
     return (
         <div className="grid grid-cols-2 h-screen">
             <div className="flex flex-col justify-between items-center w-full h-full">
