@@ -43,7 +43,7 @@ export default function RootLayout({
         )}
       >
         <div
-          className={`relative gap-2 max-w-screen-xl mx-auto flex flex-col px-2 justify-between min-h-screen`}
+          className={`relative max-w-screen-xl mx-auto px-2 justify-between min-h-screen`}
         >
           <Navbar />
           <main className="">{children}</main>

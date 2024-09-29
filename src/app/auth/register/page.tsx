@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion"; // Import Framer Motion
 import { toast } from "react-hot-toast";
+import FormSuccess from "@/components/form/FormSuccess";
 
 const Register = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -49,6 +50,7 @@ const Register = () => {
   const [rollnum, setRollnum] = useState<string>();
   const [yearofadmission, setYearofadmission] = useState<number>();
   const [branch, setBranch] = useState<Branch>();
+  const [success, setSuccess] = useState<string>();
 
   function handleStudentTypeChange(value: string) {
     switch (value) {
@@ -113,19 +115,22 @@ const Register = () => {
           branch: branch,
           name: data.name,
           password: data.password,
+          student_type: data.student_type,
         });
         console.log(response);
         if (response.status === 200) {
+          setSuccess("Please check your inbox for Email Verification.");
           toast.success("Registration Successful!");
           setTimeout(() => {
-            router.push("/auth/login")
-          }, 2000);
+            router.push("/auth/login");
+          }, 3000);
         }
 
         // You can add router logic to redirect after successful registration
       } catch (error) {
         toast.error("Some Error Occured!");
         setIsStep2(false);
+        setSuccess(undefined);
         console.log(error);
       }
     });
@@ -239,8 +244,8 @@ const Register = () => {
                                 maxLength={5}
                                 {...field}
                               >
-                                {studentType && (
-                                  <>
+                                {studentType &&
+                                  <div className="flex justify-center items-center gap-x-2">
                                     <Input
                                       type="text"
                                       className="w-16"
@@ -248,8 +253,8 @@ const Register = () => {
                                       disabled
                                     />
                                     <InputOTPSeparator />
-                                  </>
-                                )}
+                                  </div>
+                                }
                                 <InputOTPGroup className="text-black">
                                   <InputOTPSlot index={0} />
                                   <InputOTPSlot index={1} />
@@ -400,6 +405,7 @@ const Register = () => {
                         </FormItem>
                       )}
                     />
+                    {success && <FormSuccess message={success} />}
                     <div className="flex gap-x-2">
                       <Button
                         disabled={isLoading}
@@ -413,7 +419,7 @@ const Register = () => {
                         Back
                       </Button>
                       <Button
-                        disabled={isLoading}
+                        disabled={isLoading || success ? true : false}
                         className="inline-flex w-full"
                         type="submit"
                       >
