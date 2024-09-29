@@ -17,35 +17,39 @@ import { Button } from "@/components/ui/button";
 import { GraduationCap } from "lucide-react";
 import { LoginSchema } from "@/schemas/schema";
 import { api } from "@/lib/api";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+// import toast from "react-hot-toast";
+import FormError from "@/components/form/FormError";
 import toast from "react-hot-toast";
 
 const Login = () => {
-    const form = useForm<z.infer<typeof LoginSchema>>({
-        resolver: zodResolver(LoginSchema),
-    });
-
-    const router = useRouter();
-    const [isLoading, startTransition] = useTransition();
-    async function onSubmit(data: z.infer<typeof LoginSchema>) {
-        startTransition(async () => {
-            try {
-                const response = await api.post("/login", {
-                    email: data.email,
-                    password: data.password,
-                });
-                if (response.status === 200) {
-                    router.replace("/")
-                }
-
-                console.log(response.data);
-            } catch (error) {
-                toast.error("Some Error Occured!")
-                console.log(error);
-            }
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
+  });
+  const [error, setError] = useState<string>();
+  const router = useRouter();
+  const [isLoading, startTransition] = useTransition();
+  async function onSubmit(data: z.infer<typeof LoginSchema>) {
+    startTransition(async () => {
+      try {
+        const response = await api.post("/login", {
+          email: data.email,
+          password: data.password,
         });
-    }
+        if (response.status === 200) {
+          router.replace("/");
+        }
+
+        console.log(response.data);
+      } catch (error: any) {
+        if(error.response.status == 403) {
+          setError(error.response.data.error);
+          toast.error("Verify your Email to Login!")
+        }
+      }
+    });
+  }
 
     return (
         <div className="grid grid-cols-2 h-screen">
@@ -132,7 +136,8 @@ const Login = () => {
                                     Forgot Password
                                 </Link>
                             </div>
-                            <Button
+                            {error && <FormError message={error} />}
+              <Button
                                 disabled={isLoading}
                                 className="w-full font-bold"
                                 type="submit"
