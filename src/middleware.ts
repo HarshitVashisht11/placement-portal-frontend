@@ -6,8 +6,13 @@ const publicPaths = ["/auth/login", "/auth/register", "/"];
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("jwt-token")?.value;
+  console.log("PATHNAME: ", request.nextUrl.pathname);
 
-  if (publicPaths.includes(request.nextUrl.pathname)) {
+  let pathname = request.nextUrl.pathname;
+  if (
+    publicPaths.includes(request.nextUrl.pathname) ||
+    pathname.startsWith("/user/verify")
+  ) {
     return NextResponse.next();
   }
 
