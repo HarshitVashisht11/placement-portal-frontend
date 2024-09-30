@@ -57,10 +57,10 @@ const Register = () => {
             case "Regular":
                 setStudentType("CO");
                 break;
-            case "PU Meet":
+            case "PU MEET":
                 setStudentType("MCO");
                 break;
-            case "Leet":
+            case "LEET":
                 setStudentType("LCO");
                 break;
             default:
