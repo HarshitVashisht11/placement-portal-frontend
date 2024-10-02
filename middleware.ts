@@ -5,7 +5,6 @@ import type { NextRequest } from "next/server";
 const publicPaths = ["/auth/login", "/auth/register", "/"];
 
 export function middleware(request: NextRequest) {
-  console.info("COOKIES: ",request.cookies);
   const token = request.cookies.get("auth_token")?.value;
   if(!token) {
     console.log("TOKEN NOT FOUND")
