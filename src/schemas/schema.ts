@@ -19,11 +19,11 @@ export const RegisterSchema = z.object({
     .min(1900, "Invalid year of admission")
     .max(new Date().getFullYear(), "Year of admission cannot be in the future")
     .optional(),
-  student_type: z.enum(["Regular", "PU Meet", "Leet"]),
+  student_type: z.enum(["Regular", "PU MEET", "LEET"]),
   branch: z
     .enum([
       "Computer Science and Engineering",
-      "Electronics and Communication Engineering",
+      "Electronics and Communications Engineering",
       "Civil Engineering",
       "Mechanical Engineering",
     ])

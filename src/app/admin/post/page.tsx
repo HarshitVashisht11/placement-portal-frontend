@@ -6,7 +6,6 @@ import { ArrowRight, Eye, X } from 'lucide-react';
 import React, { useState } from 'react';
 import QuillRichTE from "@/components/ui/QuillRichTE";
 import { Textarea } from '@/components/ui/textarea';
-import CompanyPage from '@/app/company/page';
 import LoadingBar from '@/components/LoadingBar';
 import CompanyPreviewPage from '@/app/company/previewPage';
 import { DatePickerWithRange } from '@/components/DateRangePicker';
@@ -52,8 +51,8 @@ const Page = () => {
     </ol>
     `,
         pointsToNote: `
-    NOTE: Please read about the company in detail and Job Description carefully. 
-    Only those students who are genuinely interested in this opportunity and are willing to join should fill. 
+    NOTE: Please read about the company in detail and Job Description carefully.
+    Only those students who are genuinely interested in this opportunity and are willing to join should fill.
     Will not entertain any last minute drop out cases. <p>Tentative Date of Drive: 20th September, 2024</p>`
     });
 
