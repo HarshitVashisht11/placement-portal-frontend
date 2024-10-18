@@ -5,10 +5,14 @@ import type { NextRequest } from "next/server";
 const publicPaths = ["/auth/login", "/auth/register", "/"];
 
 export function middleware(request: NextRequest) {
-  console.info("COOKIES: ",request.cookies);
+  console.info("COOKIES: ", request.cookies);
   const token = request.cookies.get("auth_token")?.value;
-  if(!token) {
-    console.log("TOKEN NOT FOUND")
+
+  console.log("------------------------------");
+  console.log("TOKEN    : ", token);
+
+  if (!token) {
+    console.log("TOKEN NOT FOUND");
   }
   const pathname = request.nextUrl.pathname;
 
@@ -16,6 +20,7 @@ export function middleware(request: NextRequest) {
     publicPaths.includes(request.nextUrl.pathname) ||
     pathname.startsWith("/user/verify")
   ) {
+    console.info("COOKIES: ", request.cookies);
     return NextResponse.next();
   }
 
