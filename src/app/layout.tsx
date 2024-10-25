@@ -3,7 +3,6 @@ import "./globals.css";
 import { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "react-hot-toast";
 import NextTopLoader from "nextjs-toploader";
 
@@ -35,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning={true} lang="en">
       <body
         className={cn(
           fontHeading.variable,
@@ -43,24 +42,19 @@ export default function RootLayout({
           dmsans.className
         )}
       >
-        <div
-          className={`relative gap-8 max-w-screen-xl mx-auto flex flex-col px-2 justify-start min-h-screen`}
-        >
-          <NextTopLoader
-            color="#2299DD"
-            initialPosition={0.08}
-            crawlSpeed={200}
-            height={3}
-            crawl={true}
-            showSpinner={false}
-            easing="ease"
-            speed={200}
-            shadow="0 0 10px #2299DD,0 0 5px #2299DD"
-          />
-          <Navbar />
-          <main className="">{children}</main>
-          <Toaster position="bottom-center" />
-        </div>
+        <NextTopLoader
+          color="#2299DD"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+        />
+        {children}
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );
