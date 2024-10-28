@@ -6,8 +6,8 @@ const publicPaths = ["/auth/login", "/auth/register", "/"];
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("auth_token")?.value;
-  if(!token) {
-    console.log("TOKEN NOT FOUND")
+  if (!token) {
+    console.log("TOKEN NOT FOUND");
   }
   const pathname = request.nextUrl.pathname;
 
