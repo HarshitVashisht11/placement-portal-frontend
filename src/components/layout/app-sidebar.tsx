@@ -53,9 +53,9 @@ import ThemeToggle from "./ThemeToggle/theme-toggle";
 import { UserNav } from "./user-nav";
 
 export const company = {
-  name: "Acme Inc",
+  name: "Placement Portal",
   logo: GalleryVerticalEnd,
-  plan: "Enterprise",
+  plan: "Training and Placement Cell, CCET",
 };
 
 export default function AppSidebar({
@@ -244,11 +244,11 @@ export default function AppSidebar({
             <Breadcrumbs />
           </div>
           <div className=" hidden w-1/3 items-center gap-2 px-4 md:flex ">
-            <SearchInput />
+            {/* <SearchInput /> */}
           </div>
           <div className="flex items-center gap-2 px-4">
             <UserNav />
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
           </div>
         </header>
         {/* page main content */}

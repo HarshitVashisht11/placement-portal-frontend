@@ -1,18 +1,20 @@
-import { AreaGraph } from './area-graph';
-import { BarGraph } from './bar-graph';
-import { PieGraph } from './pie-graph';
-import { CalendarDateRangePicker } from '@/components/date-range-picker';
-import PageContainer from '@/components/layout/page-container';
-import { RecentSales } from './recent-sales';
-import { Button } from '@/components/ui/button';
+import { AreaGraph } from "./area-graph";
+import { BarGraph } from "./bar-graph";
+import { PieGraph } from "./pie-graph";
+import { CalendarDateRangePicker } from "@/components/date-range-picker";
+import PageContainer from "@/components/layout/page-container";
+import { RecentSales } from "./recent-sales";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import RadarGraph from "./radar-grapgh";
+import MixBarGraph from "./mix-bargraph";
 
 export default function OverViewPage() {
   return (
@@ -39,23 +41,27 @@ export default function OverViewPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Revenue
+                    Total Student Placed
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                     className="h-4 w-4 text-muted-foreground"
                   >
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    <circle cx="12" cy="12" r="6" />
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="2" />
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
+                  <div className="text-2xl font-bold">32</div>
                   <p className="text-xs text-muted-foreground">
                     +20.1% from last month
                   </p>
@@ -64,7 +70,7 @@ export default function OverViewPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Subscriptions
+                    Drives Conducted
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -82,15 +88,17 @@ export default function OverViewPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
+                  <div className="text-2xl font-bold">16</div>
                   <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
+                    +18% from last month
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Upcoming Drives
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -106,16 +114,16 @@ export default function OverViewPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
+                  <div className="text-2xl font-bold">+2</div>
                   <p className="text-xs text-muted-foreground">
-                    +19% from last month
+                    Showing drives for the next 2 weeks.
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Active Now
+                    Flagged Students
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -131,30 +139,43 @@ export default function OverViewPage() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
+                  <div className="text-2xl font-bold text-red-600">3</div>
                   <p className="text-xs text-muted-foreground">
-                    +201 since last hour
+                    Showing students who have missed 3 conscutive drives.
                   </p>
                 </CardContent>
               </Card>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <div className="col-span-4">
-                <BarGraph />
+              <div className="col-span-4 grid grid-cols-2 gap-x-4">
+                <Card className="">
+                  <CardHeader>
+                    <CardTitle>Recent Drives</CardTitle>
+                    <CardDescription>
+                      10 upcoming drives this month.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <RecentSales />
+                  </CardContent>
+                </Card>
+                <Card className="">
+                  <CardHeader>
+                    <CardTitle>Recently Placed</CardTitle>
+                    <CardDescription>
+                      24 students placed this month.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <RecentSales />
+                  </CardContent>
+                </Card>
               </div>
-              <Card className="col-span-4 md:col-span-3">
-                <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
-              </Card>
+              <div className="col-span-3 row-span-1">
+                <RadarGraph />
+              </div>
               <div className="col-span-4">
-                <AreaGraph />
+                <MixBarGraph />
               </div>
               <div className="col-span-4 md:col-span-3">
                 <PieGraph />

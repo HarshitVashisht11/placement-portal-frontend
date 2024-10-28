@@ -43,7 +43,7 @@ export default function RootLayout({
         )}
       >
         <NextTopLoader
-          color="#2299DD"
+          color="#ba2928"
           initialPosition={0.08}
           crawlSpeed={200}
           height={3}
@@ -51,7 +51,7 @@ export default function RootLayout({
           showSpinner={false}
           easing="ease"
           speed={200}
-          shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+          shadow="0 0 10px #ba2928,0 0 5px #ba2928"
         />
         {children}
         <Toaster position="bottom-center" />
