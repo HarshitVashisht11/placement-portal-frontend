@@ -39,18 +39,18 @@ import { toast } from "react-hot-toast";
 import FormSuccess from "@/components/form/FormSuccess";
 
 const Register = () => {
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
-  });
-  const router = useRouter();
-  const [isLoading, startTransition] = useTransition();
-  const [studentType, setStudentType] = useState<"CO" | "MCO" | "LCO">();
-  const [isStep2, setIsStep2] = useState<boolean>(false); // Flag to handle step transition
-  const [email, setEmail] = useState<string>();
-  const [rollnum, setRollnum] = useState<string>();
-  const [yearofadmission, setYearofadmission] = useState<number>();
-  const [branch, setBranch] = useState<Branch>();
-  const [success, setSuccess] = useState<string>();
+    const form = useForm<z.infer<typeof RegisterSchema>>({
+        resolver: zodResolver(RegisterSchema),
+    });
+    const router = useRouter();
+    const [isLoading, startTransition] = useTransition();
+    const [studentType, setStudentType] = useState<"CO" | "MCO" | "LCO">();
+    const [isStep2, setIsStep2] = useState<boolean>(false); // Flag to handle step transition
+    const [email, setEmail] = useState<string>();
+    const [rollnum, setRollnum] = useState<string>();
+    const [yearofadmission, setYearofadmission] = useState<number>();
+    const [branch, setBranch] = useState<Branch>();
+    const [success, setSuccess] = useState<string>();
 
     function handleStudentTypeChange(value: string) {
         switch (value) {
@@ -105,36 +105,36 @@ const Register = () => {
             return;
         }
 
-    // Step 2: Submit form data
-    startTransition(async () => {
-      try {
-        const response = await api.post("/signup", {
-          email: data.email,
-          rollnum: rollnum,
-          year_of_admission: yearofadmission,
-          branch: branch,
-          name: data.name,
-          student_type: data.student_type,
-        });
-        console.log(response);
-        if (response.status === 200) {
-          setSuccess("Please check your inbox for Email Verification.");
-          toast.success("Registration Successful!");
-          setTimeout(() => {
-            router.push("/auth/login");
-          }, 3000);
-        }
+        // Step 2: Submit form data
+        startTransition(async () => {
+            try {
+                const response = await api.post("/signup", {
+                    email: data.email,
+                    rollnum: rollnum,
+                    year_of_admission: yearofadmission,
+                    branch: branch,
+                    name: data.name,
+                    student_type: data.student_type,
+                });
+                console.log(response);
+                if (response.status === 200) {
+                    setSuccess("Please check your inbox for Email Verification.");
+                    toast.success("Registration Successful!");
+                    setTimeout(() => {
+                        router.push("/auth/login");
+                    }, 3000);
+                }
 
-        // You can add router logic to redirect after successful registration
-      } catch (error) {
-        form.reset();
-        toast.error("Some Error Occured!");
-        setIsStep2(false);
-        setSuccess(undefined);
-        console.log(error);
-      }
-    });
-  }
+                // You can add router logic to redirect after successful registration
+            } catch (error) {
+                form.reset();
+                toast.error("Some Error Occured!");
+                setIsStep2(false);
+                setSuccess(undefined);
+                console.log(error);
+            }
+        });
+    }
 
     // Framer Motion Animation Variants
     const variants = {
@@ -144,287 +144,287 @@ const Register = () => {
     };
 
     return (
-      <div className="grid grid-cols-2 h-screen">
-        <div className="flex flex-col justify-between items-center w-full h-full">
-          <header className="h-14 flex items-center mt-4 w-full px-6">
-            <nav className="flex w-full justify-between">
-              <Link
-                href="/"
-                className="flex items-center gap-x-2 justify-center"
-                prefetch={false}
-              >
-                <GraduationCap />
-                <span className="font-bold text-lg">Placement Portal</span>
-              </Link>
-              <Link
-                className="flex items-center gap-x-1 justify-center"
-                href={"/auth/login"}
-              >
-                <span className="font-light underline text-base">
-                  Already have an account?
-                </span>
-              </Link>
-            </nav>
-          </header>
-
-          <Form {...form}>
-            <div className="pb-24 w-full max-w-sm">
-              <span className="text-4xl text-center w-full flex justify-center">
-                Welcome to TPC Portal
-              </span>
-              <p className="text-center text-lg mb-6 mt-2 text-slate-600">
-                {isStep2
-                  ? "Enter your Personal Details below."
-                  : "Enter your Roll Number below to register."}
-              </p>
-              <hr className="my-4" />
-
-              {/* Step Transition */}
-              <AnimatePresence mode="wait">
-                {/* Step 1: Roll Number Verification */}
-                {!isStep2 && (
-                  <motion.div
-                    key="step1"
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={variants}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="w-full space-y-4"
-                    >
-                      <FormField
-                        control={form.control}
-                        name="student_type"
-                        render={({ field }) => (
-                          <FormItem aria-required>
-                            <FormLabel>Student Type</FormLabel>
-                            <Select
-                              required
-                              onValueChange={(event) => {
-                                field.onChange(event);
-                                handleStudentTypeChange(event);
-                              }}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select your Student Type." />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem textValue="Regular" value="Regular">
-                                  Regular
-                                </SelectItem>
-                                <SelectItem textValue="PU MEET" value="PU MEET">
-                                  PU MEET
-                                </SelectItem>
-                                <SelectItem textValue="LEET" value="LEET">
-                                  LEET
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="rollnum"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Roll Number</FormLabel>
-                            <FormControl>
-                              <div className="w-full flex items-end justify-between gap-x-2">
-                                <InputOTP
-                                  className="inline"
-                                  maxLength={5}
-                                  {...field}
-                                >
-                                  {studentType && (
-                                    <div className="flex justify-center items-center gap-x-2">
-                                      <Input
-                                        type="text"
-                                        className="w-16"
-                                        value={studentType}
-                                        disabled
-                                      />
-                                      <InputOTPSeparator />
-                                    </div>
-                                  )}
-                                  <InputOTPGroup className="text-black">
-                                    <InputOTPSlot index={0} />
-                                    <InputOTPSlot index={1} />
-                                    <InputOTPSlot index={2} />
-                                    <InputOTPSlot index={3} />
-                                    <InputOTPSlot index={4} />
-                                  </InputOTPGroup>
-                                </InputOTP>
-                                <Button
-                                  className="inline-flex w-full"
-                                  type="submit"
-                                >
-                                  Verify
-                                </Button>
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </form>
-                  </motion.div>
-                )}
-
-                {/* Step 2: Additional Fields After Verification */}
-                {isStep2 && (
-                  <motion.div
-                    key="step2"
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={variants}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="w-full space-y-4"
-                    >
-                      <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Name</FormLabel>
-                            <FormControl>
-                              <Input
-                                required
-                                placeholder="Enter your name"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        defaultValue={email}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input
-                                required
-                                disabled
-                                placeholder={email}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <div className="gap-x-2 flex w-full">
-                        <FormField
-                          control={form.control}
-                          name="fullrollnum"
-                          defaultValue={rollnum}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Roll Number</FormLabel>
-                              <FormControl>
-                                <Input
-                                  disabled
-                                  placeholder={rollnum}
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="year_of_admission"
-                          defaultValue={yearofadmission}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Year Of Admission</FormLabel>
-                              <FormControl>
-                                <Input
-                                  required
-                                  disabled
-                                  placeholder={yearofadmission?.toString()}
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <FormField
-                        control={form.control}
-                        name="branch"
-                        defaultValue={branch}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Branch</FormLabel>
-                            <FormControl>
-                              <Input
-                                required
-                                disabled
-                                placeholder={branch}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {success && <FormSuccess message={success} />}
-                      <div className="flex gap-x-2">
-                        <Button
-                          disabled={isLoading}
-                          onClick={() => {
-                            setIsStep2(false);
-                          }}
-                          variant={"secondary"}
-                          className="inline-flex w-full"
-                          type="button"
+        <div className="grid grid-cols-2 h-screen">
+            <div className="flex flex-col justify-between items-center w-full h-full">
+                <header className="h-14 flex items-center mt-4 w-full px-6">
+                    <nav className="flex w-full justify-between">
+                        <Link
+                            href="/"
+                            className="flex items-center gap-x-2 justify-center"
+                            prefetch={false}
                         >
-                          Back
-                        </Button>
-                        <Button
-                          disabled={isLoading || success ? true : false}
-                          className="inline-flex w-full"
-                          type="submit"
+                            <GraduationCap />
+                            <span className="font-bold text-lg">Placement Portal</span>
+                        </Link>
+                        <Link
+                            className="flex items-center gap-x-1 justify-center"
+                            href={"/auth/login"}
                         >
-                          Register
-                        </Button>
-                      </div>
-                    </form>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                            <span className="font-light underline text-base">
+                                Already have an account?
+                            </span>
+                        </Link>
+                    </nav>
+                </header>
+
+                <Form {...form}>
+                    <div className="pb-24 w-full max-w-sm">
+                        <span className="text-4xl text-center w-full flex justify-center">
+                            Welcome to TPC Portal
+                        </span>
+                        <p className="text-center text-lg mb-6 mt-2 text-slate-600">
+                            {isStep2
+                                ? "Enter your Personal Details below."
+                                : "Enter your Roll Number below to register."}
+                        </p>
+                        <hr className="my-4" />
+
+                        {/* Step Transition */}
+                        <AnimatePresence mode="wait">
+                            {/* Step 1: Roll Number Verification */}
+                            {!isStep2 && (
+                                <motion.div
+                                    key="step1"
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    variants={variants}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <form
+                                        onSubmit={form.handleSubmit(onSubmit)}
+                                        className="w-full space-y-4"
+                                    >
+                                        <FormField
+                                            control={form.control}
+                                            name="student_type"
+                                            render={({ field }) => (
+                                                <FormItem aria-required>
+                                                    <FormLabel>Student Type</FormLabel>
+                                                    <Select
+                                                        required
+                                                        onValueChange={(event) => {
+                                                            field.onChange(event);
+                                                            handleStudentTypeChange(event);
+                                                        }}
+                                                        defaultValue={field.value}
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select your Student Type." />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem textValue="Regular" value="Regular">
+                                                                Regular
+                                                            </SelectItem>
+                                                            <SelectItem textValue="PU MEET" value="PU MEET">
+                                                                PU MEET
+                                                            </SelectItem>
+                                                            <SelectItem textValue="LEET" value="LEET">
+                                                                LEET
+                                                            </SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="rollnum"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Roll Number</FormLabel>
+                                                    <FormControl>
+                                                        <div className="w-full flex items-end justify-between gap-x-2">
+                                                            <InputOTP
+                                                                className="inline"
+                                                                maxLength={5}
+                                                                {...field}
+                                                            >
+                                                                {studentType && (
+                                                                    <div className="flex justify-center items-center gap-x-2">
+                                                                        <Input
+                                                                            type="text"
+                                                                            className="w-16"
+                                                                            value={studentType}
+                                                                            disabled
+                                                                        />
+                                                                        <InputOTPSeparator />
+                                                                    </div>
+                                                                )}
+                                                                <InputOTPGroup className="text-black">
+                                                                    <InputOTPSlot index={0} />
+                                                                    <InputOTPSlot index={1} />
+                                                                    <InputOTPSlot index={2} />
+                                                                    <InputOTPSlot index={3} />
+                                                                    <InputOTPSlot index={4} />
+                                                                </InputOTPGroup>
+                                                            </InputOTP>
+                                                            <Button
+                                                                className="inline-flex w-full"
+                                                                type="submit"
+                                                            >
+                                                                Verify
+                                                            </Button>
+                                                        </div>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </form>
+                                </motion.div>
+                            )}
+
+                            {/* Step 2: Additional Fields After Verification */}
+                            {isStep2 && (
+                                <motion.div
+                                    key="step2"
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    variants={variants}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <form
+                                        onSubmit={form.handleSubmit(onSubmit)}
+                                        className="w-full space-y-4"
+                                    >
+                                        <FormField
+                                            control={form.control}
+                                            name="name"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Name</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            required
+                                                            placeholder="Enter your name"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="email"
+                                            defaultValue={email}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Email</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            required
+                                                            disabled
+                                                            placeholder={email}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <div className="gap-x-2 flex w-full">
+                                            <FormField
+                                                control={form.control}
+                                                name="fullrollnum"
+                                                defaultValue={rollnum}
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Roll Number</FormLabel>
+                                                        <FormControl>
+                                                            <Input
+                                                                disabled
+                                                                placeholder={rollnum}
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="year_of_admission"
+                                                defaultValue={yearofadmission}
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Year Of Admission</FormLabel>
+                                                        <FormControl>
+                                                            <Input
+                                                                required
+                                                                disabled
+                                                                placeholder={yearofadmission?.toString()}
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </div>
+                                        <FormField
+                                            control={form.control}
+                                            name="branch"
+                                            defaultValue={branch}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Branch</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            required
+                                                            disabled
+                                                            placeholder={branch}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        {success && <FormSuccess message={success} />}
+                                        <div className="flex gap-x-2">
+                                            <Button
+                                                disabled={isLoading}
+                                                onClick={() => {
+                                                    setIsStep2(false);
+                                                }}
+                                                variant={"secondary"}
+                                                className="inline-flex w-full"
+                                                type="button"
+                                            >
+                                                Back
+                                            </Button>
+                                            <Button
+                                                disabled={isLoading || success ? true : false}
+                                                className="inline-flex w-full"
+                                                type="submit"
+                                            >
+                                                Register
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                </Form>
+
+                <footer className="h-12 flex items-center justify-between w-full px-8">
+                    <span className="font-light text-xs">© 2024 kay-sikh</span>
+                </footer>
             </div>
-          </Form>
-
-          <footer className="h-12 flex items-center justify-between w-full px-8">
-            <span className="font-light text-xs">© 2024 kay-sikh</span>
-          </footer>
+            <div className="flex justify-center items-center w-full h-full bg-gradient-to-tr from-indigo-500 to-blue-400">
+                <h1 className="text-white text-6xl text-center font-bold">
+                    Chandigarh College of Engineering and Technology
+                </h1>
+            </div>
         </div>
-        <div className="flex justify-center items-center w-full h-full bg-gradient-to-tr from-indigo-500 to-blue-400">
-          <h1 className="text-white text-6xl text-center font-bold">
-            Chandigarh College of Engineering and Technology
-          </h1>
-        </div>
-      </div>
     );
 };
 
