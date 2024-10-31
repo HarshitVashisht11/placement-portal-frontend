@@ -3,87 +3,94 @@ import { Button } from "@/components/ui/button";
 import { auth_api } from "@/lib/api";
 import { ArrowRight, Edit } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import StudentOnboardingForm from "./_components/student-onboarding-form";
+import ProfileCreateForm from "@/app/admin/dashboard/drive/_components/profile-create-form";
 
 const Profile = () => {
-    const [isUpdatingSGPA, setIsUpdatingSGPA] = useState<boolean>(false);
-    const [userData, setUserData] = useState<User>();
-    async function GetUserData() {
-        try {
-            const response = await auth_api.get("/user");
-            if (response.status === 200) {
-                setUserData(response.data.data);
-            }
-        } catch (error) {
-            console.log(error)
-        }
+  const [isUpdatingSGPA, setIsUpdatingSGPA] = useState<boolean>(false);
+  const [userData, setUserData] = useState<User>();
+  async function GetUserData() {
+    try {
+      const response = await auth_api.get("/user");
+      if (response.status === 200) {
+        setUserData(response.data.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    useEffect(() => {
-        GetUserData()
-    }, []);
+  useEffect(() => {
+    GetUserData();
+  }, []);
 
-    if (!userData) {
-        return null
-    }
+  if (!userData) {
+    return null;
+  }
 
-    return (
-        <div>
-            <section className="border-b rounded-lg">
-                <div
-                    className="relative w-full h-[150px] rounded-lg bg-gradient-to-tr"
-                    style={{
-                        backgroundImage: "linear-gradient(45deg, #93c5fd, #6ee7b7)",
-                    }}
-                >
-                    <div className="absolute size-36 -bottom-14 left-5 rounded-full border-4 border-white bg-black">
-                        <img
-                            width={500}
-                            height={500}
-                            src={`https://api.dicebear.com/9.x/initials/svg?seed=` + userData.name}
-                            alt="Avatar"
-                            className="w-full h-full aspect-square rounded-full"
-                        ></img>
-                    </div>
-                </div>
-                <div className="p-5 ml-2 flex flex-col">
-                    <span className="mt-10 text-2xl font-black">{userData.name}</span>
-                    <span className="text-md font-regular text-gray-600">{userData.rollnum}</span>
-                    <p className="mt-2 text-md">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima
-                        sequi neque laudantium amet corporis molestias assumenda eveniet
-                        laborum est temporibus sed atque maiores modi rem nulla, harum
-                        incidunt consequatur earum.
-                    </p>
-                </div>
-            </section>
-            <section className="flex mt-4">
-                <aside className="w-1/6 p-4">
-                    <h1 className="font-black text-lg">Navigate</h1>
+  return (
+    <div>
+      <section className="border-b rounded-lg">
+        <div
+          className="relative w-full h-[150px] rounded-lg bg-gradient-to-tr"
+          style={{
+            backgroundImage: "linear-gradient(45deg, #93c5fd, #6ee7b7)",
+          }}
+        >
+          <div className="absolute size-36 -bottom-14 left-5 rounded-full border-4 border-white bg-black">
+            <img
+              width={500}
+              height={500}
+              src={
+                `https://api.dicebear.com/9.x/initials/svg?seed=` +
+                userData.name
+              }
+              alt="Avatar"
+              className="w-full h-full aspect-square rounded-full"
+            ></img>
+          </div>
+        </div>
+        <div className="p-5 ml-2 flex flex-col">
+          <span className="mt-10 text-2xl font-black">{userData.name}</span>
+          <span className="text-md font-regular text-gray-600">
+            {userData.rollnum}
+          </span>
+          <p className="mt-2 text-md">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima
+            sequi neque laudantium amet corporis molestias assumenda eveniet
+            laborum est temporibus sed atque maiores modi rem nulla, harum
+            incidunt consequatur earum.
+          </p>
+        </div>
+      </section>
+      <section className="flex mt-4">
+        {/* <aside className="w-1/6 p-4">
+          <h1 className="font-black text-lg">Navigate</h1>
 
-                    <ul className="mt-2 ml-2">
-                        <li className="flex items-center pb-2 justify-start">
-                            <ArrowRight size={12} />
-                            <a
-                                href="#sgpa"
-                                className="ml-1 underline-offset-2 hover:underline transition-all duration-700"
-                            >
-                                SGPA
-                            </a>
-                        </li>
-                        <li className="flex items-center pb-2 justify-start">
-                            <ArrowRight size={12} />
-                            <a
-                                href="#resume"
-                                className=" ml-1 underline-offset-2 hover:underline transition-all duration-700"
-                            >
-                                Resume
-                            </a>
-                        </li>
-                    </ul>
-                </aside>
+          <ul className="mt-2 ml-2">
+            <li className="flex items-center pb-2 justify-start">
+              <ArrowRight size={12} />
+              <a
+                href="#sgpa"
+                className="ml-1 underline-offset-2 hover:underline transition-all duration-700"
+              >
+                SGPA
+              </a>
+            </li>
+            <li className="flex items-center pb-2 justify-start">
+              <ArrowRight size={12} />
+              <a
+                href="#resume"
+                className=" ml-1 underline-offset-2 hover:underline transition-all duration-700"
+              >
+                Resume
+              </a>
+            </li>
+          </ul>
+        </aside> */}
 
-                <section className="flex-1 py-4 ml-4">
-                    <article className="mt-4 w-full flex flex-col gap-6">
+        <section className="flex-1 py-4 ml-4">
+          {/* <article className="mt-4 w-full flex flex-col gap-6">
                         <div className="p-4 flex flex-col gap-1 rounded-xl border">
                             <div className="flex gap-2 items-center justify-start">
                                 <h2 className="font-bold text-gray-700" id="overview">
@@ -203,11 +210,14 @@ const Profile = () => {
                         <div className="p-4 flex flex-col gap-1 rounded-xl border">
                             <h2 className="font-bold text-gray-700">Resume</h2>
                         </div>
-                    </article>
-                </section>
-            </section>
-        </div>
-    );
+                    </article> */}
+          <div className="space-y-4">
+            <ProfileCreateForm initialData={null} categories={[]} />
+          </div>
+        </section>
+      </section>
+    </div>
+  );
 };
 
 export default Profile;

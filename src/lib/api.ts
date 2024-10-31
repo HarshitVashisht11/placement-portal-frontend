@@ -6,7 +6,6 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-
 export const auth_api = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
   withCredentials: true,
@@ -44,7 +43,7 @@ auth_api.interceptors.response.use(
         isRefreshing = true;
         // Try to refresh the token
         try {
-          const response = await auth_api.get("/auth/refresh");
+          const response = await auth_api.get("/refresh");
           const newXcsrfToken = response.headers["x-csrf-token"];
           if (newXcsrfToken) {
             localStorage.setItem("x-csrf-token", newXcsrfToken);
