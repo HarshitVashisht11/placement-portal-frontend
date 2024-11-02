@@ -48,7 +48,7 @@ const LoginPage = () => {
             otp: parseInt(data.otp || "0"),
           });
           if (response.status === 200) {
-            router.replace("/");
+            router.replace("/user/profile");
           }
         } catch (error: any) {
           if (error.response.status == 403) {
