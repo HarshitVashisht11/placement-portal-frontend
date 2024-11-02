@@ -19,7 +19,7 @@ import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { coerce, z } from "zod";
 
 interface ProfileFormType {
   initialData: any | null;
@@ -35,43 +35,43 @@ const studentOnboardingSchema = z.object({
     .url("Invalid URL")
     .regex(googleDriveLinkRegex, "Must be a Google Drive link")
     .optional(),
-  marks10th: z
-    .string()
+  marks10th: z.coerce
+    .number()
     .min(1, "Please enter a valid mark or percentage")
     .max(100, "Maximum allowed is 100")
     .optional(),
-  sgpaSem1: z
-    .string()
+  sgpaSem1: z.coerce
+    .number()
     .min(1, "Please enter a valid SGPA")
     .max(10, "Maximum allowed is 10")
     .optional(),
-  sgpaSem2: z
-    .string()
+  sgpaSem2: z.coerce
+    .number()
     .min(1, "Please enter a valid SGPA")
     .max(10, "Maximum allowed is 10")
     .optional(),
-  sgpaSem3: z
-    .string()
+  sgpaSem3: z.coerce
+    .number()
     .min(1, "Please enter a valid SGPA")
     .max(10, "Maximum allowed is 10")
     .optional(),
-  sgpaSem4: z
-    .string()
+  sgpaSem4: z.coerce
+    .number()
     .min(1, "Please enter a valid SGPA")
     .max(10, "Maximum allowed is 10")
     .optional(),
-  sgpaSem5: z
-    .string()
+  sgpaSem5: z.coerce
+    .number()
     .min(1, "Please enter a valid SGPA")
     .max(10, "Maximum allowed is 10")
     .optional(),
-  sgpaSem6: z
-    .string()
+  sgpaSem6: z.coerce
+    .number()
     .min(1, "Please enter a valid SGPA")
     .max(10, "Maximum allowed is 10")
     .optional(),
-  marks12th: z
-    .string()
+  marks12th: z.coerce
+    .number()
     .min(1, "Please enter a valid mark or percentage")
     .max(100, "Maximum allowed is 100")
     .optional(),
@@ -471,9 +471,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                   name="collegeIdCard"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        Marks 12<sup>th</sup>
-                      </FormLabel>
+                      <FormLabel>Student ID</FormLabel>
                       <FormControl>
                         <Input
                           disabled={loading}
