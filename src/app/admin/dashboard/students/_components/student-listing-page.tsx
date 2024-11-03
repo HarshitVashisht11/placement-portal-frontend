@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import EmployeeTable from "./employee-tables";
+import { api } from "@/lib/api";
 
 type TEmployeeListingPage = {};
 
@@ -28,6 +29,10 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
 
   // mock api call
   const data = await fakeUsers.getUsers(filters);
+  const getStudentsData = async () => {
+    await api.get("/admin/user");
+  };
+
   const totalUsers = data.total_users;
   const employee: Employee[] = data.users;
 

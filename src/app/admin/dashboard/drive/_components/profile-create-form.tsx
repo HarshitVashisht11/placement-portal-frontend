@@ -13,13 +13,16 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { coerce, z } from "zod";
+import toast from "react-hot-toast";
+import { z } from "zod";
 
 interface ProfileFormType {
   initialData: any | null;
@@ -125,17 +128,19 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
   } = form;
 
   const onSubmit = async (data: z.infer<typeof studentOnboardingSchema>) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      if (initialData) {
-        // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
-      } else {
-        // const res = await axios.post(`/api/products/create-product`, data);
-        // console.log("product", res);
-      }
-      router.refresh();
-      router.push(`/admin/dashboard/products`);
-    } catch (error: any) {
+      const response = await api.post("/user/data", {
+        ...data,
+      });
+
+      console.log("response", response);
+      toast.success(toastMessage);
+
+      // router.refresh();
+    } catch (error) {
+      console.log("error", error);
+      toast.error("Something went wrong. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -249,18 +254,18 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
           {steps.map((step, index) => (
             <li key={step.name} className="md:flex-1">
               {currentStep > index ? (
-                <div className="group flex w-full flex-col border-l-4 border-sky-600 py-2 pl-4 transition-colors md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
-                  <span className="text-sm font-medium text-sky-600 transition-colors ">
+                <div className="group flex w-full flex-col border-l-4 border-tpc-red py-2 pl-4 transition-colors md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
+                  <span className="text-sm font-medium text-tpc-red transition-colors ">
                     {step.id}
                   </span>
                   <span className="text-sm font-medium">{step.name}</span>
                 </div>
               ) : currentStep === index ? (
                 <div
-                  className="flex w-full flex-col border-l-4 border-sky-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+                  className="flex w-full flex-col border-l-4 border-tpctext-tpc-red py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
                   aria-current="step"
                 >
-                  <span className="text-sm font-medium text-sky-600">
+                  <span className="text-sm font-medium text-tpc-red">
                     {step.id}
                   </span>
                   <span className="text-sm font-medium">{step.name}</span>
@@ -280,7 +285,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
       <Separator />
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(processForm)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
           <div
@@ -513,21 +518,69 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
               </>
             )}
             {currentStep === 2 && (
-              <div>
-                <h1>Completed</h1>
-                <pre className="whitespace-pre-wrap">
-                  {JSON.stringify(data)}
-                </pre>
-                <Button
-                  onClick={() => {
-                    console.log("submitting form 1");
-                    form.handleSubmit(processForm)();
-                  }}
-                  disabled={loading}
-                  className="ml-auto"
-                >
-                  {action}
-                </Button>
+              <div className="col-span-3 p-6 bg-white shadow-lg rounded-lg space-y-6">
+                <h1 className="text-2xl font-bold text-center text-sky-800">
+                  Review Your Information
+                </h1>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {Object.entries(data).map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="p-4 py-3 border border-gray-200 space-y-2 rounded-md bg-sky-50"
+                    >
+                      {key === "sgpaProofs" ||
+                      key === "collegeIdCard" ||
+                      key === "achievementCertificates" ? (
+                        <>
+                          <h3 className="text-sm mb-2 font-bold text-gray-700 capitalize">
+                            {key.replace(/([A-Z])/g, " $1")}
+                          </h3>
+                          <Link
+                            target="_blank"
+                            href={(value as string) || ""}
+                            className="underline text-base text-gray-800"
+                          >
+                            {(value as string) || "N/A"}
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <h3 className="text-sm font-bold text-gray-700 capitalize">
+                            {key.replace(/([A-Z])/g, " $1")}
+                          </h3>
+                          <p className="text-base text-gray-800">
+                            {(value as string) || "N/A"}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-end gap-4">
+                  <Button
+                    type="button"
+                    variant={"secondary"}
+                    onClick={() => {
+                      setCurrentStep(0);
+                    }} // Function to go back and edit
+                    className=""
+                  >
+                    Edit Information
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      form.handleSubmit(processForm)();
+                    }}
+                    variant={"default"}
+                    disabled={loading}
+                    className=""
+                  >
+                    {action || "Submit"}
+                  </Button>
+                </div>
               </div>
             )}
           </div>
