@@ -14,19 +14,21 @@ import {
 } from "@/components/ui/popover"
 
 export function DatePicker({
-    className, setFormData
+    className, id, onChange
 }: {
     className?: string;
     setFormData?: any;
+    id: string;
+    onChange: any;
 }) {
     const [date, setDate] = React.useState<Date>()
     return (
         <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger className={cn(className)} asChild>
                 <Button
                     variant={"outline"}
                     className={cn(
-                        "w-[280px] justify-start text-left font-normal",
+                        cn("w-full justify-start text-left font-normal", className),
                         !date && "text-muted-foreground"
                     )}
                 >
@@ -36,9 +38,11 @@ export function DatePicker({
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
                 <Calendar
+                    id={id}
                     mode="single"
                     selected={date}
                     onSelect={setDate}
+                    onDayClick={onChange(date)}
                     initialFocus
                 />
             </PopoverContent>

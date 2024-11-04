@@ -5,11 +5,9 @@ import React from 'react';
 interface CompanyPageProps {
     formData: {
         companyName: string;
-        companyOverview: string;
-        stipend: string;
-        salary: string;
         jobLocation: string;
-        driveDate: any;
+        driveDate: Date;
+        driveDuration: number;
         requirements: string;
         pointsToNote: string;
     };
