@@ -2,13 +2,12 @@ import PageContainer from "@/components/layout/page-container";
 import { buttonVariants } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Employee } from "@/constants/data";
-import { fakeUsers } from "@/constants/mock-api";
 import { searchParamsCache } from "@/lib/searchparams";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import EmployeeTable from "./employee-tables";
+import { api } from "@/lib/api";
 
 type TEmployeeListingPage = {};
 
@@ -16,6 +15,7 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
   // Showcasing the use of search params cache in nested RSCs
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("q");
+  const branch = searchParamsCache.get("branch");
   const gender = searchParamsCache.get("gender");
   const pageLimit = searchParamsCache.get("limit");
 
@@ -24,12 +24,56 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
     limit: pageLimit,
     ...(search && { search }),
     ...(gender && { genders: gender }),
+    ...(branch && { branches: branch }),
   };
 
-  // mock api call
-  const data = await fakeUsers.getUsers(filters);
-  const totalUsers = data.total_users;
-  const employee: Employee[] = data.users;
+  console.log("BRANCH", branch);
+
+  let data;
+  try {
+    const base = "/admin/user";
+    let url = base;
+    if (page > 1) {
+      if (url === base) {
+        url += "?page=" + page;
+      } else {
+        url += "&page=" + page;
+      }
+    }
+
+    if (gender) {
+      let genderArgs = gender.split(".").join(",");
+      if (url === base) {
+        url += "?gender=" + genderArgs;
+      } else {
+        url += "&gender=" + genderArgs;
+      }
+    }
+
+    if (branch) {
+      let branchArgs = branch.split(".").join(",");
+      if (url === base) {
+        url += "?branch=" + branchArgs;
+      } else {
+        url += "&branch=" + branchArgs;
+      }
+    }
+    console.log(url);
+    data = await api.get(url);
+    console.log(data.data);
+  } catch (error) {
+    console.log(error);
+  }
+  // const data = await fakeUsers.getUsers(filters);
+  // const getStudentsData = async () => {
+  // };
+
+  if (data == undefined) return null;
+
+  const totalUsers = data.data.total_users ? data.data.total_users : 0;
+  const employee: User[] = data.data.users ? data.data.users : [];
+
+  console.log("EMPLOYEE: ", employee);
 
   return (
     <PageContainer scrollable>

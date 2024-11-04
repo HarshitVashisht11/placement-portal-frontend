@@ -1,14 +1,14 @@
-import { searchParamsCache } from '@/lib/searchparams';
-import { SearchParams } from 'nuqs/parsers';
-import React from 'react';
-import EmployeeListingPage from './_components/employee-listing-page';
+import { searchParamsCache } from "@/lib/searchparams";
+import { SearchParams } from "nuqs/parsers";
+import React from "react";
+import EmployeeListingPage from "./_components/student-listing-page";
 
 type pageProps = {
   searchParams: SearchParams;
 };
 
 export const metadata = {
-  title: 'Dashboard : Students'
+  title: "Dashboard : Students",
 };
 
 export default async function Page({ searchParams }: pageProps) {
