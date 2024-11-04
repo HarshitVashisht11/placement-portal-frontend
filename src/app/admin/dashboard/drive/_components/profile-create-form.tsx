@@ -1,14 +1,10 @@
 "use client";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,26 +12,89 @@ import {
 } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { profileSchema, type ProfileFormValues } from "@/lib/form-schema";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangleIcon, Trash, Trash2Icon } from "lucide-react";
+import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { coerce, z } from "zod";
 
 interface ProfileFormType {
   initialData: any | null;
   categories: any;
 }
+
+const googleDriveLinkRegex = /^(https:\/\/)?(drive\.google\.com)/;
+
+const studentOnboardingSchema = z.object({
+  resumeLink: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+  marks10th: z.coerce
+    .number()
+    .min(1, "Please enter a valid mark or percentage")
+    .max(100, "Maximum allowed is 100")
+    .optional(),
+  sgpaSem1: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpaSem2: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpaSem3: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpaSem4: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpaSem5: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpaSem6: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  marks12th: z.coerce
+    .number()
+    .min(1, "Please enter a valid mark or percentage")
+    .max(100, "Maximum allowed is 100")
+    .optional(),
+  sgpaProofs: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+  collegeIdCard: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+  achievementCertificates: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+});
+
 const ProfileCreateForm: React.FC<ProfileFormType> = ({
   initialData,
   categories,
@@ -45,33 +104,18 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
-  const title = initialData ? "Edit product" : "Create Your Profile";
-  const description = initialData
-    ? "Edit a product."
-    : "To create your resume, we first need some basic information about you.";
-  const toastMessage = initialData ? "Product updated." : "Product created.";
-  const action = initialData ? "Save changes" : "Create";
+  const title = "Finish Onboarding";
+  const description =
+    "Before you apply for job opportunities, we first need some basic information about you.";
+  const toastMessage = "Profile Updated.";
+  const action = "Finish Onboarding";
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [data, setData] = useState({});
   const delta = currentStep - previousStep;
 
-  const defaultValues = {
-    jobs: [
-      {
-        jobtitle: "",
-        employer: "",
-        startdate: "",
-        enddate: "",
-        jobcountry: "",
-        jobcity: "",
-      },
-    ],
-  };
-
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema),
-    defaultValues,
+  const form = useForm<z.infer<typeof studentOnboardingSchema>>({
+    resolver: zodResolver(studentOnboardingSchema),
     mode: "onChange",
   });
 
@@ -80,12 +124,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
     formState: { errors },
   } = form;
 
-  const { append, remove, fields } = useFieldArray({
-    control,
-    name: "jobs",
-  });
-
-  const onSubmit = async (data: ProfileFormValues) => {
+  const onSubmit = async (data: z.infer<typeof studentOnboardingSchema>) => {
     try {
       setLoading(true);
       if (initialData) {
@@ -115,45 +154,38 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
     }
   };
 
-  const processForm: SubmitHandler<ProfileFormValues> = (data) => {
+  const processForm = (data: z.infer<typeof studentOnboardingSchema>) => {
+    console.log("HERE");
     console.log("data ==>", data);
     setData(data);
     // api call and reset
     // form.reset();
   };
 
-  type FieldName = keyof ProfileFormValues;
+  type FieldName = keyof z.infer<typeof studentOnboardingSchema>;
 
   const steps = [
     {
       id: "Step 1",
-      name: "Personal Information",
+      name: "Academic Record",
       fields: [
-        "firstname",
-        "lastname",
-        "email",
-        "contactno",
-        "country",
-        "city",
+        "marks10th",
+        "marks12th",
+        "sgpaSem1",
+        "sgpaSem2",
+        "sgpaSem3",
+        "sgpaSem4",
+        "sgpaSem5",
+        "sgpaSem6",
       ],
     },
     {
       id: "Step 2",
-      name: "Professional Informations",
+      name: "Documents",
       // fields are mapping and flattening for the error to be trigger  for the dynamic fields
-      fields: fields
-        ?.map((_, index) => [
-          `jobs.${index}.jobtitle`,
-          `jobs.${index}.employer`,
-          `jobs.${index}.startdate`,
-          `jobs.${index}.enddate`,
-          `jobs.${index}.jobcountry`,
-          `jobs.${index}.jobcity`,
-          // Add other field names as needed
-        ])
-        .flat(),
+      fields: ["sgpaProofs", "collegeIdCard", "achievementCertificates"],
     },
-    { id: "Step 3", name: "Complete" },
+    { id: "Step 3", name: "Review" },
   ];
 
   const next = async () => {
@@ -165,9 +197,24 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
 
     if (!output) return;
 
+    let err = false;
+    const values = form.getValues(fields as FieldName[]);
+    values.forEach((value, index) => {
+      if (fields && !value) {
+        form.setError(fields[index] as any, {
+          type: "required",
+          message: "This field is required",
+        });
+
+        err = true;
+      }
+    });
+
+    if (err) return;
+
     if (currentStep < steps.length - 1) {
       if (currentStep === steps.length - 2) {
-        await form.handleSubmit(processForm)();
+        form.handleSubmit(processForm)();
       }
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
@@ -180,9 +227,6 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
       setCurrentStep((step) => step - 1);
     }
   };
-
-  const countries = [{ id: "wow", name: "india" }];
-  const cities = [{ id: "2", name: "kerala" }];
 
   return (
     <>
@@ -250,14 +294,17 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
               <>
                 <FormField
                   control={form.control}
-                  name="firstname"
+                  name="marks10th"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First Name</FormLabel>
+                      <FormLabel>
+                        Marks 10<sup>th</sup>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           disabled={loading}
-                          placeholder="John"
+                          required
+                          placeholder="Enter a numeric value without % sign."
                           {...field}
                         />
                       </FormControl>
@@ -267,14 +314,17 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="lastname"
+                  name="marks12th"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last Name</FormLabel>
+                      <FormLabel>
+                        Marks 12<sup>th</sup>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           disabled={loading}
-                          placeholder="Doe"
+                          required
+                          placeholder="Enter a numeric value without % sign."
                           {...field}
                         />
                       </FormControl>
@@ -284,14 +334,15 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="sgpaSem1"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>SGPA Semester 1</FormLabel>
                       <FormControl>
                         <Input
                           disabled={loading}
-                          placeholder="johndoe@gmail.com"
+                          required
+                          placeholder="Enter your Semester 1 SGPA"
                           {...field}
                         />
                       </FormControl>
@@ -301,15 +352,15 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="contactno"
+                  name="sgpaSem2"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Contact Number</FormLabel>
+                      <FormLabel>SGPA Semester 2</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          placeholder="Enter you contact number"
                           disabled={loading}
+                          required
+                          placeholder="Enter your Semester 2 SGPA"
                           {...field}
                         />
                       </FormControl>
@@ -319,65 +370,72 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="country"
+                  name="sgpaSem3"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Country</FormLabel>
-                      <Select
-                        disabled={loading}
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue
-                              defaultValue={field.value}
-                              placeholder="Select a country"
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {/* @ts-expext-error  */}
-                          {countries.map((country) => (
-                            <SelectItem key={country.id} value={country.id}>
-                              {country.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>SGPA Semester 3</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          required
+                          placeholder="Enter your Semester 3 SGPA"
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
-                  name="city"
+                  name="sgpaSem4"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>City</FormLabel>
-                      <Select
-                        disabled={loading}
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue
-                              defaultValue={field.value}
-                              placeholder="Select a city"
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {cities.map((city) => (
-                            <SelectItem key={city.id} value={city.id}>
-                              {city.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>SGPA Semester 4</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          required
+                          placeholder="Enter your Semester 4 SGPA"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sgpaSem5"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SGPA Semester 5</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          required
+                          placeholder="Enter your Semester 5 SGPA"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sgpaSem6"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SGPA Semester 6</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          required
+                          placeholder="Enter your Semester 6 SGPA"
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -386,202 +444,72 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
             )}
             {currentStep === 1 && (
               <>
-                {fields?.map((field, index) => (
-                  <Accordion
-                    type="single"
-                    collapsible
-                    defaultValue="item-1"
-                    key={field.id}
-                  >
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger
-                        className={cn(
-                          "relative !no-underline [&[data-state=closed]>button]:hidden [&[data-state=open]>.alert]:hidden",
-                          errors?.jobs?.[index] && "text-red-700"
-                        )}
-                      >
-                        {`Work Experience ${index + 1}`}
+                <FormField
+                  control={form.control}
+                  name="sgpaProofs"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>SGPA Proofs</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          required
+                          placeholder="Enter a public drive link."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Enter a public drive link for your SGPA proofs from Sem
+                        1 to Sem 6.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="collegeIdCard"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Student ID</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          required
+                          placeholder="Enter a drive link below."
+                          {...field}
+                        />
+                      </FormControl>
 
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="absolute right-8"
-                          onClick={() => remove(index)}
-                        >
-                          <Trash2Icon className="h-4 w-4 " />
-                        </Button>
-                        {errors?.jobs?.[index] && (
-                          <span className="alert absolute right-8">
-                            <AlertTriangleIcon className="h-4 w-4   text-red-700" />
-                          </span>
-                        )}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div
-                          className={cn(
-                            "relative mb-4 gap-8 rounded-md border p-4 md:grid md:grid-cols-3"
-                          )}
-                        >
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.jobtitle`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Job title</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="text"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.employer`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Employer</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="text"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.startdate`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Start date</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="date"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.enddate`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>End date</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="date"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.jobcountry`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Job country</FormLabel>
-                                <Select
-                                  disabled={loading}
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue
-                                        defaultValue={field.value}
-                                        placeholder="Select your job country"
-                                      />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {countries.map((country) => (
-                                      <SelectItem
-                                        key={country.id}
-                                        value={country.id}
-                                      >
-                                        {country.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.jobcity`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Job city</FormLabel>
-                                <Select
-                                  disabled={loading}
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue
-                                        defaultValue={field.value}
-                                        placeholder="Select your job city"
-                                      />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {cities.map((city) => (
-                                      <SelectItem key={city.id} value={city.id}>
-                                        {city.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                ))}
-
-                <div className="mt-4 flex justify-center">
-                  <Button
-                    type="button"
-                    className="flex justify-center"
-                    size={"lg"}
-                    onClick={() =>
-                      append({
-                        jobtitle: "",
-                        employer: "",
-                        startdate: "",
-                        enddate: "",
-                        jobcountry: "",
-                        jobcity: "",
-                      })
-                    }
-                  >
-                    Add More
-                  </Button>
-                </div>
+                      <FormDescription>
+                        Enter a public drive link for your College ID Card.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="achievementCertificates"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Achievements/Certifications.</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={loading}
+                          required
+                          placeholder="Enter a drive link below."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Enter a public drive link for your Achievements and
+                        Certifications in one pdf.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </>
             )}
             {currentStep === 2 && (
@@ -590,13 +518,19 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 <pre className="whitespace-pre-wrap">
                   {JSON.stringify(data)}
                 </pre>
+                <Button
+                  onClick={() => {
+                    console.log("submitting form 1");
+                    form.handleSubmit(processForm)();
+                  }}
+                  disabled={loading}
+                  className="ml-auto"
+                >
+                  {action}
+                </Button>
               </div>
             )}
           </div>
-
-          {/* <Button disabled={loading} className="ml-auto" type="submit">
-            {action}
-          </Button> */}
         </form>
       </Form>
       {/* Navigation */}
