@@ -11,21 +11,13 @@ import { api } from "@/lib/api";
 
 type TEmployeeListingPage = {};
 
-export default async function EmployeeListingPage({ }: TEmployeeListingPage) {
-    // Showcasing the use of search params cache in nested RSCs
-    const page = searchParamsCache.get("page");
-    const search = searchParamsCache.get("q");
-    const branch = searchParamsCache.get("branch");
-    const gender = searchParamsCache.get("gender");
-    const pageLimit = searchParamsCache.get("limit");
-
-    const filters = {
-        page,
-        limit: pageLimit,
-        ...(search && { search }),
-        ...(gender && { genders: gender }),
-        ...(branch && { branches: branch }),
-    };
+export default async function EmployeeListingPage({}: TEmployeeListingPage) {
+  // Showcasing the use of search params cache in nested RSCs
+  const page = searchParamsCache.get("page");
+  const search = searchParamsCache.get("q");
+  const branch = searchParamsCache.get("branch");
+  const gender = searchParamsCache.get("gender");
+  const pageLimit = searchParamsCache.get("limit");
 
     console.log("BRANCH", branch);
 
@@ -50,30 +42,35 @@ export default async function EmployeeListingPage({ }: TEmployeeListingPage) {
             }
         }
 
-        if (branch) {
-            let branchArgs = branch.split(".").join(",");
-            if (url === base) {
-                url += "?branch=" + branchArgs;
-            } else {
-                url += "&branch=" + branchArgs;
-            }
-        }
-        console.log(url);
-        data = await api.get(url);
-        console.log(data.data);
-    } catch (error) {
-        console.log(error);
+    if (branch) {
+      let branchArgs = branch.split(".").join(",");
+      if (url === base) {
+        url += "?branch=" + branchArgs;
+      } else {
+        url += "&branch=" + branchArgs;
+      }
     }
-    // const data = await fakeUsers.getUsers(filters);
-    // const getStudentsData = async () => {
-    // };
+
+    if (search) {
+      if (url === base) {
+        url += "?q=" + search;
+      } else {
+        url += "&q=" + search;
+      }
+    }
+
+    data = await api.get(url);
+  } catch (error) {
+    console.log(error);
+  }
+  // const data = await fakeUsers.getUsers(filters);
+  // const getStudentsData = async () => {
+  // };
 
     if (data == undefined) return null;
 
-    const totalUsers = data.data.total_users ? data.data.total_users : 0;
-    const employee: User[] = data.data.users ? data.data.users : [];
-
-    console.log("EMPLOYEE: ", employee);
+  const totalUsers = data.data.total_users ? data.data.total_users : 0;
+  const employee: User[] = data.data.users ? data.data.users : [];
 
     return (
         <PageContainer scrollable>
