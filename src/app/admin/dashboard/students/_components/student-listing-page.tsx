@@ -19,14 +19,6 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
   const gender = searchParamsCache.get("gender");
   const pageLimit = searchParamsCache.get("limit");
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search }),
-    ...(gender && { genders: gender }),
-    ...(branch && { branches: branch }),
-  };
-
   console.log("BRANCH", branch);
 
   let data;
@@ -58,9 +50,16 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
         url += "&branch=" + branchArgs;
       }
     }
-    console.log(url);
+
+    if (search) {
+      if (url === base) {
+        url += "?q=" + search;
+      } else {
+        url += "&q=" + search;
+      }
+    }
+
     data = await api.get(url);
-    console.log(data.data);
   } catch (error) {
     console.log(error);
   }
@@ -72,8 +71,6 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
 
   const totalUsers = data.data.total_users ? data.data.total_users : 0;
   const employee: User[] = data.data.users ? data.data.users : [];
-
-  console.log("EMPLOYEE: ", employee);
 
   return (
     <PageContainer scrollable>
