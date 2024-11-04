@@ -16,3 +16,14 @@ type User = {
   gender: "MALE" | "FEMALE";
   isOnboarded: boolean;
 };
+
+type Company = {
+  id: string;
+  name: string;
+  hrName: string;
+  overview: string;
+  contactEmail: string;
+  contactNumber: string;
+  linkedIn?: string;
+  website?: string;
+};

@@ -9,7 +9,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { SearchParams } from "nuqs/parsers";
 import { Suspense } from "react";
-import ProductListingPage from "./_components/product-listing";
+import ProductListingPage from "./_components/company-listing";
 import ProductTableAction from "./_components/product-tables/product-table-action";
 
 export const metadata = {
@@ -31,12 +31,9 @@ export default async function Page({ searchParams }: pageProps) {
     <PageContainer>
       <div className="space-y-4">
         <div className="flex items-start justify-between">
-          <Heading
-            title="Products"
-            description="Manage products (Server side table functionalities.)"
-          />
+          <Heading title="Companies" description="Manage Companies here." />
           <Link
-            href="/admin/dashboard/product/new"
+            href="/admin/dashboard/company/add"
             className={cn(buttonVariants(), "text-xs md:text-sm")}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New
@@ -46,7 +43,7 @@ export default async function Page({ searchParams }: pageProps) {
         <ProductTableAction />
         <Suspense
           key={key}
-          fallback={<DataTableSkeleton columnCount={5} rowCount={10} />}
+          fallback={<DataTableSkeleton columnCount={7} rowCount={10} />}
         >
           <ProductListingPage />
         </Suspense>

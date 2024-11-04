@@ -12,7 +12,7 @@ const config: Config = {
     extend: {
       colors: {
         "tpc-red": "#ba2928",
-        background: "hsl(var(--background))",
+        background: "#FFFFFF",
         foreground: "hsl(var(--foreground))",
         card: {
           DEFAULT: "hsl(var(--card))",
