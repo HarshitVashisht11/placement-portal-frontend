@@ -1,4 +1,5 @@
 type User = {
+  id: string;
   name: string;
   email: string;
   password: string;
@@ -11,5 +12,7 @@ type User = {
     | "Mechanical Engineering";
   student_type: "Regular" | "PU Meet" | "Leet";
   is_verified: boolean;
-  verification_token: string | null;
+  role: "STUDENT";
+  gender: "MALE" | "FEMALE";
+  isOnboarded: boolean;
 };

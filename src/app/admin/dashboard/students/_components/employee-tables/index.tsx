@@ -7,6 +7,7 @@ import { DataTableSearch } from "@/components/ui/table/data-table-search";
 import { Employee } from "@/constants/data";
 import { columns } from "./columns";
 import {
+  BRANCH_OPTIONS,
   GENDER_OPTIONS,
   useEmployeeTableFilters,
 } from "./use-employee-table-filters";
@@ -15,12 +16,14 @@ export default function EmployeeTable({
   data,
   totalData,
 }: {
-  data: Employee[];
+  data: User[];
   totalData: number;
 }) {
   const {
     genderFilter,
     setGenderFilter,
+    branchFiter,
+    setBranchFilter,
     isAnyFilterActive,
     resetFilters,
     searchQuery,
@@ -45,18 +48,11 @@ export default function EmployeeTable({
           filterValue={genderFilter}
         />
         <DataTableFilterBox
-          filterKey="gender"
-          title="Gender"
-          options={GENDER_OPTIONS}
-          setFilterValue={setGenderFilter}
-          filterValue={genderFilter}
-        />
-        <DataTableFilterBox
-          filterKey="gender"
-          title="Gender"
-          options={GENDER_OPTIONS}
-          setFilterValue={setGenderFilter}
-          filterValue={genderFilter}
+          filterKey="branch"
+          title="Branch"
+          options={BRANCH_OPTIONS}
+          setFilterValue={setBranchFilter}
+          filterValue={branchFiter}
         />
         <DataTableResetFilter
           isFilterActive={isAnyFilterActive}
