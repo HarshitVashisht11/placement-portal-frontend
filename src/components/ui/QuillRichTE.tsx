@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 
 const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function QuillRichTE({ onChange, outerClassName, innerClassName, id, value }:
+export default function QuillRichTE({ onChange, outerClassName, innerClassName, id }:
     {
-        onChange?: any; outerClassName?: string; innerClassName?: string; id: string; value: string
+        onChange?: any; outerClassName?: string; innerClassName?: string; id: string;
     }) {
     const [content, setContent] = useState("");
 

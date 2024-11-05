@@ -27,3 +27,13 @@ type Company = {
   linkedIn?: string;
   website?: string;
 };
+
+type Role = {
+  id: string;
+  drive_id: string;
+  title: string;
+  stipend_low: number;
+  stipend_high: number;
+  salary_low: number;
+  salary_high: number;
+};

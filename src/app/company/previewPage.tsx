@@ -20,10 +20,8 @@ interface CompanyPageProps {
 
 const CompanyPreviewPage: React.FC<CompanyPageProps> = ({ formData, jobRoles, onPublish, setPreview }) => {
 
-    const { from, to } = formData.driveDate;
     const options = { day: 'numeric', month: 'short' };
     const fromDateString = from.toLocaleDateString('en-GB', options);
-    const toDateString = to.toLocaleDateString('en-GB', options);
 
     const handlePreviewClick = () => {
         console.log(formData);
