@@ -1,9 +1,18 @@
-import NavbarContainerLayout from "@/components/layout/navbar-container";
+import UserSidebar from "@/components/layout/UserSidebar";
+import type { Metadata } from "next";
 
-export default function RootLayout({
+export const metadata: Metadata = {
+  title: "User Dashboard",
+};
+
+export default function DashboardLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  return <NavbarContainerLayout>{children}</NavbarContainerLayout>;
+}) {
+  return (
+    <>
+      <UserSidebar>{children}</UserSidebar>
+    </>
+  );
 }

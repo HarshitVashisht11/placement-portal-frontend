@@ -5,6 +5,7 @@ import { ArrowRight, Edit } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import StudentOnboardingForm from "./_components/student-onboarding-form";
 import ProfileCreateForm from "@/app/admin/dashboard/drive/_components/profile-create-form";
+import PageContainer from "@/components/layout/page-container";
 
 const Profile = () => {
   const [isUpdatingSGPA, setIsUpdatingSGPA] = useState<boolean>(false);
@@ -29,7 +30,7 @@ const Profile = () => {
   }
 
   return (
-    <div>
+    <PageContainer scrollable>
       <section className="border-b rounded-lg">
         <div
           className="relative w-full h-[150px] rounded-lg bg-gradient-to-tr"
@@ -216,7 +217,7 @@ const Profile = () => {
           </div>
         </section>
       </section>
-    </div>
+    </PageContainer>
   );
 };
 

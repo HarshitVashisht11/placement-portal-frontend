@@ -49,8 +49,7 @@ const Navbar = () => {
     <div className="sticky top-4 left-0 border px-4 py-2 rounded-md flex z-20 flex-row items-center justify-between w-full mx-auto bg-white">
       <Link href="/">
         <div className="flex flex-row gap-2 items-center justify-center">
-          <BriefcaseBusiness color="black" />
-          <span className="font-bold text-lg">Placement Portal</span>
+          <span className="font-bold text-lg">TPC Placement Portal</span>
         </div>
       </Link>
       <div className="flex gap-6 items-center justify-center">
@@ -60,7 +59,7 @@ const Navbar = () => {
         <NavLink href="/forum" label="Forum">
           <MessageSquareQuote color="black" size={19} />
         </NavLink>
-        <NavLink href="/user/profile" label="Pofile">
+        <NavLink href="/user/profile" label="Profile">
           <UserRound color="black" size={19} />
         </NavLink>
       </div>

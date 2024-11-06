@@ -180,3 +180,40 @@ export const navItems: NavItem[] = [
   //   items: [], // No child items
   // },
 ];
+
+export const userNavItems: NavItem[] = [
+  {
+    title: "Dashboard",
+    url: "/user/overview",
+    icon: "dashboard",
+    isActive: false,
+    items: [], // Empty array as there are no child items for Dashboard
+  },
+  {
+    title: "Profile",
+    url: "/user/profile",
+    icon: "user",
+    isActive: true,
+    items: [], // No child items
+  },
+  {
+    title: "Drives",
+    url: "/user/drives", // Placeholder as there is no direct link for the parent
+    icon: "laptop",
+    isActive: false,
+    items: [],
+  },
+  {
+    title: "View All Companies",
+    url: "/user/company",
+    icon: "ellipsis",
+    items: [],
+  },
+  // {
+  //   title: "Manage Users",
+  //   url: "/admin/dashboard/company",
+  //   icon: "product",
+  //   isActive: false,
+  //   items: [], // No child items
+  // },
+];

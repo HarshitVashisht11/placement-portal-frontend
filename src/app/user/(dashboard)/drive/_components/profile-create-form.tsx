@@ -73,11 +73,6 @@ const studentOnboardingSchema = z.object({
     .min(1, "Please enter a valid SGPA")
     .max(10, "Maximum allowed is 10")
     .optional(),
-  cgpa: z.coerce
-    .number()
-    .min(1, "Please enter a valid CGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
   marks12th: z.coerce
     .number()
     .min(1, "Please enter a valid mark or percentage")
@@ -187,7 +182,6 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
         "sgpaSem4",
         "sgpaSem5",
         "sgpaSem6",
-        "cgpa",
       ],
     },
     {
@@ -444,26 +438,6 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                           disabled={loading}
                           required
                           placeholder="Enter your Semester 6 SGPA"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="cgpa"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        CGPA(Till 6<sup>th</sup> Semester)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={loading}
-                          required
-                          placeholder="Enter your CGPA"
                           {...field}
                         />
                       </FormControl>

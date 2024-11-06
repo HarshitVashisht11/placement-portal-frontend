@@ -42,23 +42,28 @@ const LoginPage = () => {
   async function onSubmit(data: z.infer<typeof LoginSchema>) {
     if (otpReceived) {
       startTransition(async () => {
+        toast.loading("Logging in...");
         try {
           const response = await api.post("/login", {
             email: data.email,
             otp: parseInt(data.otp || "0"),
           });
           if (response.status === 200) {
-            router.replace("/user/profile");
+            toast.dismiss();
+            toast.success("Logged in successfully!");
+            router.replace("/jobs");
           }
         } catch (error: any) {
           if (error.response.status == 403) {
             setError(error.response.data.error);
+            toast.dismiss();
             toast.error("Verify your Email to Login!");
           }
         }
       });
     } else {
       startTransition(async () => {
+        toast.loading("Getting OTP...");
         try {
           const res = await api.get("/otp", {
             params: {
@@ -67,11 +72,13 @@ const LoginPage = () => {
           });
           if (res.status === 200) {
             setotpReceived(true);
+            toast.dismiss();
             toast.success("Login OTP sent to your email!");
           }
         } catch (error: any) {
           if (error.response.status == 403) {
             setError(error.response.data.error);
+            toast.dismiss();
             toast.error("Verify your Email to Login!");
           }
         }
@@ -169,9 +176,9 @@ const LoginPage = () => {
               {error && <FormError message={error} />}
               {!otpReceived ? (
                 <Button
-                  variant={"secondary"}
+                  variant={"default"}
                   disabled={isLoading}
-                  className="w-full font-bold"
+                  className="w-full mt-2 font-bold"
                   type="submit"
                 >
                   Get OTP
