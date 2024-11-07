@@ -41,6 +41,7 @@ type Role = {
 type Drive = {
   id: string;
   company_id: string;
+  name: string;
   drive_date: Date;
   drive_duration: string;
   roles: Role[];

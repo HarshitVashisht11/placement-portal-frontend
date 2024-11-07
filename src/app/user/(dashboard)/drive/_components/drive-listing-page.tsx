@@ -4,9 +4,9 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { api } from "@/lib/api";
 import { columns } from "./columns";
 
-type CompanyListingPage = {};
+type DriveListingPage = {};
 
-export default async function CompanyListingPage({}: CompanyListingPage) {
+export default async function DriveListingPage({}: DriveListingPage) {
   // Showcasing the use of search params cache in nested RSCs
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("q");
@@ -21,7 +21,7 @@ export default async function CompanyListingPage({}: CompanyListingPage) {
 
   let data;
   try {
-    const base = "/user/company";
+    const base = "/user/drive";
     let url = base;
     if (page > 1) {
       if (url === base) {
@@ -47,10 +47,8 @@ export default async function CompanyListingPage({}: CompanyListingPage) {
   if (data == undefined) return null;
   console.log(data.data);
   // const data = await fakeProducts.getProducts(filters);
-  const totalProducts = data.data.total_companies
-    ? data.data.total_companies
-    : 0;
-  const products: Drive[] = data.data.companies ? data.data.companies : [];
+  const totalProducts = data.data.total_drives ? data.data.total_drives : 0;
+  const products: Drive[] = data.data.drives ? data.data.drives : [];
 
   return (
     <DataTable columns={columns} data={products} totalItems={totalProducts} />
