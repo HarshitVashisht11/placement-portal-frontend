@@ -18,7 +18,7 @@ interface CompanyPageProps {
 
 
 
-const CompanyPreviewPage: React.FC<CompanyPageProps> = ({ formData, jobRoles, onPublish, setPreview }) => {
+const PreviewPage: React.FC<CompanyPageProps> = ({ formData, jobRoles, onPublish, setPreview }) => {
 
     const options = { day: 'numeric', month: 'short' };
     const fromDateString = from.toLocaleDateString('en-GB', options);
@@ -153,4 +153,4 @@ const CompanyPreviewPage: React.FC<CompanyPageProps> = ({ formData, jobRoles, on
     );
 };
 
-export default CompanyPreviewPage;
+export default PreviewPage;
