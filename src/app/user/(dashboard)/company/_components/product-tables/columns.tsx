@@ -9,18 +9,6 @@ export const columns: ColumnDef<Product>[] = [
     header: "Company Name",
   },
   {
-    accessorKey: "hrName",
-    header: "HR Name",
-  },
-  {
-    accessorKey: "contactEmail",
-    header: "Email",
-  },
-  {
-    accessorKey: "contactNumber",
-    header: "Number",
-  },
-  {
     accessorKey: "linkedIn",
     header: "linkedIn",
   },

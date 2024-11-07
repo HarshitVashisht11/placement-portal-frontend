@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface CellActionProps {
-  data: Product;
+  data: Drive;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {

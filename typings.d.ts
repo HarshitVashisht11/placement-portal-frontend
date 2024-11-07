@@ -37,3 +37,17 @@ type Role = {
   salary_low: number;
   salary_high: number;
 };
+
+type Drive = {
+  id: string;
+  company_id: string;
+  drive_date: Date;
+  drive_duration: string;
+  roles: Role[];
+  deadline: Date;
+  location: string;
+  qualifications: string;
+  points_to_note: string;
+  job_description: string;
+  min_cgpa: number;
+};

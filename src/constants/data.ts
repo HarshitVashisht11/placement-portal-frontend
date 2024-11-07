@@ -111,14 +111,11 @@ export type Employee = {
 };
 
 export type Product = {
-  photo_url: string;
+  id: string;
+  overview: string;
   name: string;
-  description: string;
-  created_at: string;
-  price: number;
-  id: number;
-  category: string;
-  updated_at: string;
+  linkedIn: string;
+  website: string;
 };
 
 export const navItems: NavItem[] = [
@@ -198,7 +195,7 @@ export const userNavItems: NavItem[] = [
   },
   {
     title: "Drives",
-    url: "/user/drives", // Placeholder as there is no direct link for the parent
+    url: "/user/drive", // Placeholder as there is no direct link for the parent
     icon: "laptop",
     isActive: false,
     items: [],

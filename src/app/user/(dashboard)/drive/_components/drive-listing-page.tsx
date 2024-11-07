@@ -1,9 +1,8 @@
-import { Product } from "@/constants/data";
 import { fakeProducts } from "@/constants/mock-api";
 import { searchParamsCache } from "@/lib/searchparams";
-import { DataTable as ProductTable } from "@/components/ui/table/data-table";
-import { columns } from "./product-tables/columns";
+import { DataTable } from "@/components/ui/table/data-table";
 import { api } from "@/lib/api";
+import { columns } from "./columns";
 
 type CompanyListingPage = {};
 
@@ -51,13 +50,9 @@ export default async function CompanyListingPage({}: CompanyListingPage) {
   const totalProducts = data.data.total_companies
     ? data.data.total_companies
     : 0;
-  const products: Product[] = data.data.companies ? data.data.companies : [];
+  const products: Drive[] = data.data.companies ? data.data.companies : [];
 
   return (
-    <ProductTable
-      columns={columns}
-      data={products}
-      totalItems={totalProducts}
-    />
+    <DataTable columns={columns} data={products} totalItems={totalProducts} />
   );
 }
