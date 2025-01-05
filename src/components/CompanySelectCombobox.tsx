@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { useCallback, useState } from "react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useCallback, useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,13 +12,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { api } from "@/lib/api"
+} from "@/components/ui/popover";
+import { api } from "@/lib/api";
 
 interface Item {
   value: string;
@@ -45,27 +45,27 @@ const frameworks: Item[] = [
     value: "astro",
     label: "Astro",
   },
-]
+];
 
-export function Combobox(
-  {
-    itemList, className, placeholder, onChange
-
-  }: {
-    itemList: Item[];
-    className: string;
-    placeholder: string;
-    onChange: any;
-  }
-) {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
+export function Combobox({
+  itemList,
+  className,
+  placeholder,
+  onChange,
+}: {
+  itemList: Item[];
+  className: string;
+  placeholder: string;
+  onChange: any;
+}) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
   const [itemsList, setItemsList] = useState<Item[]>([
     {
       value: "hi",
-      label: "hello"
-    }
-  ])
+      label: "hello",
+    },
+  ]);
 
   const [search, setSearch] = useState<string>("");
 
@@ -76,15 +76,15 @@ export function Combobox(
     if (searchTerm != "" && searchTerm != null) {
       const timeout = setTimeout(async () => {
         try {
-          const response = await api.get(`/companyList?q=${search}`);
+          const response = await api.get(`/company?q=${search}`);
           if (response.status === 200) {
-            let partialItems: Item[] = []
-            response.data.companies.map((company: any) => (
+            let partialItems: Item[] = [];
+            response.data.companies.map((company: any) =>
               partialItems.push({
                 value: company.id,
-                label: company.name
+                label: company.name,
               })
-            ))
+            );
             setItemsList(partialItems);
           }
         } catch (error) {
@@ -115,7 +115,11 @@ export function Combobox(
 
       <PopoverContent className="w-full p-2">
         <Command>
-          <CommandInput className="w-full" placeholder={placeholder} onChangeCapture={(e) => handleCompanyList(e)} />
+          <CommandInput
+            className="w-full"
+            placeholder={placeholder}
+            onChangeCapture={(e) => handleCompanyList(e)}
+          />
           <CommandList>
             <CommandEmpty>No items found.</CommandEmpty>
             <CommandGroup>
@@ -124,9 +128,9 @@ export function Combobox(
                   key={item.value}
                   value={item.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                    onChange(currentValue)
+                    setValue(currentValue === value ? "" : currentValue);
+                    setOpen(false);
+                    onChange(currentValue);
                   }}
                 >
                   <Check
@@ -143,5 +147,5 @@ export function Combobox(
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

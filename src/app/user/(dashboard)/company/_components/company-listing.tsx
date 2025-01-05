@@ -3,7 +3,8 @@ import { fakeProducts } from "@/constants/mock-api";
 import { searchParamsCache } from "@/lib/searchparams";
 import { DataTable as ProductTable } from "@/components/ui/table/data-table";
 import { columns } from "./product-tables/columns";
-import { api } from "@/lib/api";
+import { auth_api } from "@/lib/api";
+import { cookies } from "next/headers";
 
 type CompanyListingPage = {};
 
@@ -40,7 +41,17 @@ export default async function CompanyListingPage({}: CompanyListingPage) {
       }
     }
 
-    data = await api.get(url);
+    // Retrieve cookies from the client
+    const clientCookies = cookies().getAll(); // Get all cookies as an array of objects
+    const cookieString = clientCookies
+      .map((c) => `${c.name}=${c.value}`)
+      .join("; "); // Format as 'name=value'
+
+    data = await auth_api.get(url, {
+      headers: {
+        Cookie: cookieString, // Send cookies in the request header
+      },
+    });
   } catch (error) {
     console.log(error);
   }

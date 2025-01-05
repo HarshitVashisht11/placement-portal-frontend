@@ -159,12 +159,12 @@ export const navItems: NavItem[] = [
     items: [
       {
         title: "Create Drive",
-        url: "/admin/dashboard/drive",
+        url: "/admin/dashboard/drive/add",
         icon: "userPen",
       },
       {
-        title: "Add new Company",
-        url: "/admin/dashboard/company/add",
+        title: "View all Drives",
+        url: "/admin/dashboard/drive",
         icon: "login",
       },
     ],

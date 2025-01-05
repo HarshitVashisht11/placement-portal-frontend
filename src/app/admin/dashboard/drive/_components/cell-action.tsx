@@ -43,7 +43,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/user/drive/${data.id}`)}
+            onClick={() => router.push(`/admin/dashboard/drive/${data.id}`)}
           >
             <View className="mr-2 h-4 w-4" /> View More
           </DropdownMenuItem>

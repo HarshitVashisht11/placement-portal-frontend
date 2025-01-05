@@ -1,3 +1,10 @@
+enum Branch {
+  CSE = "Computer Science and Engineering",
+  ECE = "Electronics and Communications Engineering",
+  CIVIL = "Civil Engineering",
+  MECH = "Mechanical Engineering",
+}
+
 type User = {
   id: string;
   name: string;
@@ -51,4 +58,25 @@ type Drive = {
   points_to_note: string;
   job_description: string;
   min_cgpa: number;
+  drive_type: "on-campus" | "online" | "company-office";
+};
+
+type DriveView = {
+  id: string;
+  company: Company;
+  name: string;
+  drive_date: string;
+  drive_duration: string;
+  roles: Role[];
+  deadline: Date;
+  location: string;
+  qualifications: string;
+  points_to_note: string;
+  job_description: string;
+  min_cgpa: number;
+  drive_type: "on-campus" | "online" | "company-office";
+  applied_role: Role;
+  allowed_branches: Branch[];
+  allowed_data: string;
+  expired: boolean;
 };
