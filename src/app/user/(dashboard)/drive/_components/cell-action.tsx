@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface CellActionProps {
-  data: Product;
+  data: Drive;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -43,7 +43,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/dashboard/product/${data.id}`)}
+            onClick={() => router.push(`/user/drive/${data.id}`)}
           >
             <View className="mr-2 h-4 w-4" /> View More
           </DropdownMenuItem>

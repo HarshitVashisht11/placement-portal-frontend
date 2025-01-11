@@ -26,9 +26,7 @@ export function Breadcrumbs() {
               </BreadcrumbItem>
             )}
             {index < items.length - 1 && (
-              <BreadcrumbSeparator className="hidden md:block">
-                <Slash />
-              </BreadcrumbSeparator>
+              <BreadcrumbSeparator />
             )}
             {index === items.length - 1 && (
               <BreadcrumbPage>{item.title}</BreadcrumbPage>

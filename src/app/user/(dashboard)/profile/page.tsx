@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { auth_api } from "@/lib/api";
 import { ArrowRight, Edit } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import StudentOnboardingForm from "./_components/student-onboarding-form";
 import ProfileCreateForm from "@/app/admin/dashboard/drive/_components/profile-create-form";
 import PageContainer from "@/components/layout/page-container";
 
