@@ -111,14 +111,11 @@ export type Employee = {
 };
 
 export type Product = {
-  photo_url: string;
+  id: string;
+  overview: string;
   name: string;
-  description: string;
-  created_at: string;
-  price: number;
-  id: number;
-  category: string;
-  updated_at: string;
+  linkedIn: string;
+  website: string;
 };
 
 export const navItems: NavItem[] = [
@@ -169,12 +166,12 @@ export const navItems: NavItem[] = [
     items: [
       {
         title: "Create Drive",
-        url: "/admin/dashboard/drive",
+        url: "/admin/dashboard/drive/add",
         icon: "userPen",
       },
       {
-        title: "Add new Company",
-        url: "/admin/dashboard/company/add",
+        title: "View all Drives",
+        url: "/admin/dashboard/drive",
         icon: "login",
       },
     ],
@@ -205,7 +202,7 @@ export const userNavItems: NavItem[] = [
   },
   {
     title: "Drives",
-    url: "/user/drives", // Placeholder as there is no direct link for the parent
+    url: "/user/drive", // Placeholder as there is no direct link for the parent
     icon: "laptop",
     isActive: false,
     items: [],

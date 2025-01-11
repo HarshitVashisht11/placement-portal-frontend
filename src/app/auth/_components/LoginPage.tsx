@@ -70,15 +70,17 @@ const LoginPage = () => {
               email: data.email,
             },
           });
+          toast.dismiss();
           if (res.status === 200) {
             setotpReceived(true);
-            toast.dismiss();
             toast.success("Login OTP sent to your email!");
           }
         } catch (error: any) {
+          toast.dismiss();
+          //! FOR TESTING
+          setotpReceived(true)
           if (error.response.status == 403) {
             setError(error.response.data.error);
-            toast.dismiss();
             toast.error("Verify your Email to Login!");
           }
         }
