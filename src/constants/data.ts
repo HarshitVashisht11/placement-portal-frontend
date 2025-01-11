@@ -132,7 +132,14 @@ export const navItems: NavItem[] = [
   {
     title: "Students",
     url: "/admin/dashboard/students",
-    icon: "user",
+    icon: "users",
+    isActive: false,
+    items: [], // No child items
+  },
+  {
+    title: "Manage Roles",
+    url: "/admin/dashboard/manage",
+    icon: "userCog",
     isActive: false,
     items: [], // No child items
   },
