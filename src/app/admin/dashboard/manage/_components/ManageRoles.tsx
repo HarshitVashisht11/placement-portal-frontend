@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
-import EmployeeTable from './employee-tables';
 import { api } from '@/lib/api';
 type TEmployeeListingPage = {};
 
@@ -20,8 +19,6 @@ export default async function ManageRolesPage({ }: TEmployeeListingPage) {
   const pageLimit = searchParamsCache.get("limit");
 
   console.log("BRANCH", branch);
-
-  let data;
   try {
     const base = "/admin/user";
     let url = base;
@@ -59,11 +56,11 @@ export default async function ManageRolesPage({ }: TEmployeeListingPage) {
       }
     }
 
-    data = await api.get(url);
+    const data = await api.get(url);
   } catch (error) {
     console.log(error);
   }
-  const data = await fakeUsers.getUsers(filters);
+  // const data = await fakeUsers.getUsers(filters);
   const getStudentsData = async () => {
   };
 

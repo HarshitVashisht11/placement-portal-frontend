@@ -1,7 +1,8 @@
-import { ArrowLeft, Download, ArrowRight, MapPin, Banknote, Calendar, Upload } from 'lucide-react';
+import { ArrowLeft, Download, ArrowRight, MapPin, Banknote, Calendar, Upload, CornerRightUpIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 
 
 const CompanyPreviewPage = ({
@@ -13,14 +14,14 @@ const CompanyPreviewPage = ({
   onFormSubmit: any;
 }
 ) => {
-  const [companyData, setCompanyData] = useState<any>()
-
+  const [companyData, setCompanyData] = useState<any>(undefined)
   useEffect(() => {
+    driveDataForPreview.roles.sort((a:any, b:any) => b.salary_high - a.salary_high);
     const getCompanyData = async () => {
       const response = await api.get(`/getCompanyFromID?id=${driveDataForPreview.company_id}`);
       if (response.status == 201) {
         console.log(response.status);
-
+        console.log(response.data.Data);
         setCompanyData(response.data.Data)
       }
     }
@@ -42,9 +43,9 @@ const CompanyPreviewPage = ({
             <span className='pl-2'>Back</span>
           </Button>
           <div>
-            <h1 className="text-4xl font-black">{driveDataForPreview.companyName} (Preview)</h1>
+            <h1 className="text-4xl font-black">{companyData?.name} (Preview)</h1>
             <div className='text-md text-gray-600 font-regular'>
-              <span>{driveDataForPreview.roles.length > 1 ? "Miltiple Roles" : driveDataForPreview.roles[0].title}</span> | <span>{driveDataForPreview.salary}</span>
+              <span>{driveDataForPreview.roles.length > 1 ? "Miltiple Roles (" + driveDataForPreview.roles.length.toString() + ")" : driveDataForPreview.roles[0].title}</span> | <span>{driveDataForPreview.roles[0].salary_high}</span>
             </div>
           </div>
         </div>
@@ -93,14 +94,21 @@ const CompanyPreviewPage = ({
           </article>
           <article className='mt-4 w-full flex flex-col gap-6'>
             <div className='flex flex-col gap-1'>
-              <h2 className='font-bold text-gray-700' id='overview'>Overview</h2>
+              <h2 className='font-bold text-gray-700 flex flex-row items-center justify-between' id='overview'>
+                <span>Overview</span>
+                <a href={companyData?.website?.startsWith("http") ? companyData?.website : `https://${companyData?.website}`} className='text-blue-500 underline ml-2 text-sm' rel="noopener noreferrer" target='_blank'>
+                  <span className='flex flex-row items-center'>
+                    Visit official Website <ArrowTopRightIcon />
+                  </span>
+                </a>
+              </h2>
               <p className='text-justify text-gray-600 font-regular'>
                 {companyData ? companyData.overview : ""}
               </p>
             </div>
 
             <div className='flex flex-col gap-1'>
-              <h2 className='font-bold text-gray-700' id='roles'>Job Titles</h2>
+              <h2 className='font-bold text-gray-700' id='roles'>Job Roles</h2>
               <table className="min-w-full mt-4 border-collapse border border-gray-300">
                 <thead>
                   <tr>
@@ -152,7 +160,7 @@ const CompanyPreviewPage = ({
                 variant={"default"}
                 className='font-bold text-lg'
                 onClick={onFormSubmit(onPublish)}
-              >x
+              >
                 <Upload size={22} />
                 <span className='pl-2'>Publish Opportunity</span>
               </Button>
@@ -170,7 +178,7 @@ const CompanyPreviewPage = ({
             </li>
             <li className='flex items-center pb-2 justify-start'>
               <ArrowRight size={12} />
-              <a href="#roles" className=' ml-1 underline-offset-2 hover:underline transition-all duration-700'>Job Titles</a>
+              <a href="#roles" className=' ml-1 underline-offset-2 hover:underline transition-all duration-700'>Job Roles</a>
             </li>
             <li className='flex items-center pb-2 justify-start'>
               <ArrowRight size={12} />

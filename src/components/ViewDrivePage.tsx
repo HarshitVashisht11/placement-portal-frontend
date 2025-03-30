@@ -200,18 +200,18 @@ const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
                       role.salary_low === 0 && role.salary_high === 0
                         ? "N.A."
                         : role.salary_low === role.salary_high
-                        ? role.salary_high
-                        : role.salary_low === 0
-                        ? role.salary_high
-                        : `${role.salary_low} - ${role.salary_high}`;
+                          ? role.salary_high
+                          : role.salary_low === 0
+                            ? role.salary_high
+                            : `${role.salary_low} - ${role.salary_high}`;
                     const stipend =
                       role.stipend_low === 0 && role.stipend_high === 0
                         ? "N.A."
                         : role.stipend_low === role.stipend_high
-                        ? role.stipend_high
-                        : role.stipend_low === 0
-                        ? role.stipend_high
-                        : `${role.stipend_low} - ${role.stipend_high}`;
+                          ? role.stipend_high
+                          : role.stipend_low === 0
+                            ? role.stipend_high
+                            : `${role.stipend_low} - ${role.stipend_high}`;
 
                     return role.id == selectedRoleId ? (
                       <tr key={role.id}>
@@ -232,9 +232,8 @@ const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
                     ) : (
                       <tr
                         key={role.id}
-                        className={`${
-                          isApplied ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                        className={`${isApplied ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
                       >
                         <td className="px-4 py-2 text-center">
                           <input

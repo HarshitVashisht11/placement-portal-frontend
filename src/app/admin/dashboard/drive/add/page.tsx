@@ -1,7 +1,6 @@
 import { SearchParams } from "nuqs/parsers";
 import { DrivePostPage } from "../_components/DrivePostPage";
 import PageContainer from "@/components/layout/page-container";
-// import ProfileViewPage from './_components/profile-view-page';
 
 type pageProps = {
   searchParams: SearchParams;

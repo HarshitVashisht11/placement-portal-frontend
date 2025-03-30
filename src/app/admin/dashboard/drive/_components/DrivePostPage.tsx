@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
-import { ArrowRight, Edit, Eye, Plus, Trash, X } from "lucide-react";
+import { ArrowRight, Eye, Plus, Trash, X } from "lucide-react";
 import React, { useState } from "react";
 import QuillRichTE from "@/components/ui/QuillRichTE";
 import LoadingBar from "@/components/LoadingBar";
@@ -58,6 +58,11 @@ export const DrivePostPage = () => {
   };
 
   const handlePreviewClick = () => {
+    console.log({
+            ...getValues(),
+            id: Date.now().toString(),
+            roles: jobRoles,
+          });
     window.scrollTo({
       top: 0,
       behavior: "smooth",
