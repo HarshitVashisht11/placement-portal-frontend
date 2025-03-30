@@ -1,6 +1,9 @@
 import { SearchParams } from "nuqs/parsers";
-import { DrivePostPage } from "../_components/DrivePostPage";
+
 import PageContainer from "@/components/layout/page-container";
+import ManageRolesPage from "./_components/ManageRoles";
+import { searchParamsCache } from "@/lib/searchparams";
+// import ProfileViewPage from './_components/profile-view-page';
 
 type pageProps = {
   searchParams: SearchParams;
@@ -11,9 +14,10 @@ export const metadata = {
 };
 
 export default async function Page({ searchParams }: pageProps) {
+  searchParamsCache.parse(searchParams);
   return (
     <PageContainer scrollable>
-      <DrivePostPage />
+      <ManageRolesPage />
     </PageContainer>
   );
 }

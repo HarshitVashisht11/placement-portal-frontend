@@ -31,6 +31,8 @@ import {
   UserPen,
   UserX2Icon,
   X,
+  UserCog,
+  Users,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -56,8 +58,10 @@ export const Icons = {
   billing: CreditCard,
   ellipsis: MoreVertical,
   add: Plus,
+  users: Users,
   warning: AlertTriangle,
   user: User,
+  userCog: UserCog,
   arrowRight: ArrowRight,
   help: HelpCircle,
   pizza: Pizza,
