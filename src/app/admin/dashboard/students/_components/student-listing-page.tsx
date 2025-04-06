@@ -6,41 +6,41 @@ import { searchParamsCache } from "@/lib/searchparams";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import EmployeeTable from "./employee-tables";
+import StudentTable from "./student-tables";
 import { api } from "@/lib/api";
 
-type TEmployeeListingPage = {};
+type TStudentListPage = {};
 
-export default async function EmployeeListingPage({}: TEmployeeListingPage) {
+export default async function StudentListPage({}: TStudentListPage) {
   // Showcasing the use of search params cache in nested RSCs
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("q");
   const branch = searchParamsCache.get("branch");
   const gender = searchParamsCache.get("gender");
+  const role = searchParamsCache.get("role");
   const pageLimit = searchParamsCache.get("limit");
 
-    console.log("BRANCH", branch);
 
-    let data;
-    try {
-        const base = "/admin/user";
-        let url = base;
-        if (page > 1) {
-            if (url === base) {
-                url += "?page=" + page;
-            } else {
-                url += "&page=" + page;
-            }
-        }
+  let data;
+  try {
+    const base = "/admin/user";
+    let url = base;
+    if (page > 1) {
+      if (url === base) {
+        url += "?page=" + page;
+      } else {
+        url += "&page=" + page;
+      }
+    }
 
-        if (gender) {
-            let genderArgs = gender.split(".").join(",");
-            if (url === base) {
-                url += "?gender=" + genderArgs;
-            } else {
-                url += "&gender=" + genderArgs;
-            }
-        }
+    if (gender) {
+      let genderArgs = gender.split(".").join(",");
+      if (url === base) {
+        url += "?gender=" + genderArgs;
+      } else {
+        url += "&gender=" + genderArgs;
+      }
+    }
 
     if (branch) {
       let branchArgs = branch.split(".").join(",");
@@ -48,6 +48,15 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
         url += "?branch=" + branchArgs;
       } else {
         url += "&branch=" + branchArgs;
+      }
+    }
+
+    if (role) {
+      let roleArgs = role.split(".").join(",");
+      if (url === base) {
+        url += "?role=" + roleArgs;
+      } else {
+        url += "&role=" + roleArgs;
       }
     }
 
@@ -67,30 +76,30 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
   // const getStudentsData = async () => {
   // };
 
-    if (data == undefined) return null;
+  if (data == undefined) return null;
 
   const totalUsers = data.data.total_users ? data.data.total_users : 0;
-  const employee: User[] = data.data.users ? data.data.users : [];
+  const student: User[] = data.data.users ? data.data.users : [];
 
-    return (
-        <PageContainer scrollable>
-            <div className="space-y-4">
-                <div className="flex items-start justify-between">
-                    <Heading
-                        title={`Students (${totalUsers})`}
-                        description="Manage students (Server side table functionalities.)"
-                    />
+  return (
+    <PageContainer scrollable>
+      <div className="space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title={`Students (${totalUsers})`}
+            description="Manage students (Server side table functionalities.)"
+          />
 
-                    <Link
-                        href={"/admin/dashboard/employee/new"}
-                        className={cn(buttonVariants({ variant: "default" }))}
-                    >
-                        <Plus className="mr-2 h-4 w-4" /> Add New
-                    </Link>
-                </div>
-                <Separator />
-                <EmployeeTable data={employee} totalData={totalUsers} />
-            </div>
-        </PageContainer>
-    );
+          <Link
+            href={"/admin/dashboard/student/new"}
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add New
+          </Link>
+        </div>
+        <Separator />
+        <StudentTable data={student} totalData={totalUsers} />
+      </div>
+    </PageContainer>
+  );
 }

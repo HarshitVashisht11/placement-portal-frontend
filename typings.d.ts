@@ -79,4 +79,5 @@ type DriveView = {
   allowed_branches: Branch[];
   allowed_data: string;
   expired: boolean;
+  required_data: string;
 };

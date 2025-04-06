@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { StudentOnboardingSchema } from "@/schemas/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 import Link from "next/link";
@@ -24,116 +25,77 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-interface ProfileFormType {
-  initialData: any | null;
-  categories: any;
-}
-
-const googleDriveLinkRegex = /^(https:\/\/)?(drive\.google\.com)/;
-
-const studentOnboardingSchema = z.object({
-  resumeLink: z
-    .string()
-    .min(1, "Please enter a valid link")
-    .url("Invalid URL")
-    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
-    .optional(),
-  marks10th: z.coerce
-    .number()
-    .min(1, "Please enter a valid mark or percentage")
-    .max(100, "Maximum allowed is 100")
-    .optional(),
-  sgpaSem1: z.coerce
-    .number()
-    .min(1, "Please enter a valid SGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
-  sgpaSem2: z.coerce
-    .number()
-    .min(1, "Please enter a valid SGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
-  sgpaSem3: z.coerce
-    .number()
-    .min(1, "Please enter a valid SGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
-  sgpaSem4: z.coerce
-    .number()
-    .min(1, "Please enter a valid SGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
-  sgpaSem5: z.coerce
-    .number()
-    .min(1, "Please enter a valid SGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
-  sgpaSem6: z.coerce
-    .number()
-    .min(1, "Please enter a valid SGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
-  cgpa: z.coerce
-    .number()
-    .min(1, "Please enter a valid CGPA")
-    .max(10, "Maximum allowed is 10")
-    .optional(),
-  marks12th: z.coerce
-    .number()
-    .min(1, "Please enter a valid mark or percentage")
-    .max(100, "Maximum allowed is 100")
-    .optional(),
-  sgpaProofs: z
-    .string()
-    .min(1, "Please enter a valid link")
-    .url("Invalid URL")
-    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
-    .optional(),
-  collegeIdCard: z
-    .string()
-    .min(1, "Please enter a valid link")
-    .url("Invalid URL")
-    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
-    .optional(),
-  achievementCertificates: z
-    .string()
-    .min(1, "Please enter a valid link")
-    .url("Invalid URL")
-    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
-    .optional(),
-});
-
-const ProfileCreateForm: React.FC<ProfileFormType> = ({
+const ProfileCreateForm = ({
   initialData,
+  isOnboarded,
   categories,
+}: {
+  initialData: z.infer<typeof StudentOnboardingSchema> | null;
+  isOnboarded: boolean;
+  categories: any;
 }) => {
-  const params = useParams();
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgLoading, setImgLoading] = useState(false);
-  const title = "Finish Onboarding";
-  const description =
-    "Before you apply for job opportunities, we first need some basic information about you.";
+
+  const title = isOnboarded ? "Edit Data" : "Finish Onboarding";
+  const description = isOnboarded
+    ? "Edit your profile data."
+    : "Before you apply for job opportunities, we first need some basic information about you.";
+
   const toastMessage = "Profile Updated.";
-  const action = "Finish Onboarding";
+  const action = initialData != null ? "Edit Form" : "Finish Onboarding";
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [data, setData] = useState({});
-  const delta = currentStep - previousStep;
 
-  const form = useForm<z.infer<typeof studentOnboardingSchema>>({
-    resolver: zodResolver(studentOnboardingSchema),
+  const form = useForm<z.infer<typeof StudentOnboardingSchema>>({
+    resolver: zodResolver(StudentOnboardingSchema),
     mode: "onChange",
+    values: {
+      marks10th: initialData?.marks10th,
+      marks12th: initialData?.marks12th,
+      sgpasem1: initialData?.sgpasem1,
+      sgpasem2: initialData?.sgpasem2,
+      sgpasem3: initialData?.sgpasem3,
+      sgpasem4: initialData?.sgpasem4,
+      sgpasem5: initialData?.sgpasem5,
+      sgpasem6: initialData?.sgpasem6,
+      cgpa: initialData?.cgpa,
+      sgpaProofs: initialData?.sgpaProofs || "",
+      collegeIdCard: initialData?.collegeIdCard || "",
+      achievementCertificates: initialData?.achievementCertificates || "",
+    },
   });
 
   const {
-    control,
-    formState: { errors },
+    formState,
   } = form;
 
-  const onSubmit = async (data: z.infer<typeof studentOnboardingSchema>) => {
+  const updateOnboardingData = async (data: z.infer<typeof StudentOnboardingSchema>) => {
+     try {
+       const response = await api.put("/user/data", {
+         ...data,
+       });
+
+       console.log("response", response);
+       toast.success(toastMessage);
+
+       // router.refresh();
+     } catch (error) {
+       console.log("error", error);
+       toast.error("Something went wrong. Please try again later.");
+     } finally {
+       setLoading(false);
+     }
+  }
+
+  const onSubmit = async (data: z.infer<typeof StudentOnboardingSchema>) => {
     setLoading(true);
+
+    if(initialData) {
+      updateOnboardingData(data);
+      return;
+    }
+
     try {
       const response = await api.post("/user/data", {
         ...data,
@@ -151,20 +113,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
     }
   };
 
-  const onDelete = async () => {
-    try {
-      setLoading(true);
-      //   await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
-      router.refresh();
-      router.push(`/${params.storeId}/products`);
-    } catch (error: any) {
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
-  };
-
-  const processForm = (data: z.infer<typeof studentOnboardingSchema>) => {
+  const processForm = (data: z.infer<typeof StudentOnboardingSchema>) => {
     console.log("HERE");
     console.log("data ==>", data);
     setData(data);
@@ -172,7 +121,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
     // form.reset();
   };
 
-  type FieldName = keyof z.infer<typeof studentOnboardingSchema>;
+  type FieldName = keyof z.infer<typeof StudentOnboardingSchema>;
 
   const steps = [
     {
@@ -181,12 +130,12 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
       fields: [
         "marks10th",
         "marks12th",
-        "sgpaSem1",
-        "sgpaSem2",
-        "sgpaSem3",
-        "sgpaSem4",
-        "sgpaSem5",
-        "sgpaSem6",
+        "sgpasem1",
+        "sgpasem2",
+        "sgpasem3",
+        "sgpasem4",
+        "sgpasem5",
+        "sgpasem6",
         "cgpa",
       ],
     },
@@ -243,16 +192,6 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
     <>
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        {initialData && (
-          <Button
-            disabled={loading}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
       </div>
       <Separator />
       <div>
@@ -345,7 +284,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="sgpaSem1"
+                  name="sgpasem1"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SGPA Semester 1</FormLabel>
@@ -363,7 +302,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="sgpaSem2"
+                  name="sgpasem2"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SGPA Semester 2</FormLabel>
@@ -381,7 +320,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="sgpaSem3"
+                  name="sgpasem3"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SGPA Semester 3</FormLabel>
@@ -399,7 +338,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="sgpaSem4"
+                  name="sgpasem4"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SGPA Semester 4</FormLabel>
@@ -417,7 +356,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="sgpaSem5"
+                  name="sgpasem5"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SGPA Semester 5</FormLabel>
@@ -435,7 +374,7 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="sgpaSem6"
+                  name="sgpasem6"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>SGPA Semester 6</FormLabel>
@@ -589,11 +528,11 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                     type="button"
                     variant={"secondary"}
                     onClick={() => {
-                      setCurrentStep(0);
+                      setCurrentStep(0)
                     }} // Function to go back and edit
                     className=""
                   >
-                    Edit Information
+                    Reset Form
                   </Button>
 
                   <Button

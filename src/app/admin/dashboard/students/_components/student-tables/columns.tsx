@@ -25,31 +25,31 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "name",
-    header: "NAME",
+    header: "Name",
   },
   {
     accessorKey: "email",
-    header: "EMAIL",
+    header: "Email",
   },
   {
     accessorKey: "rollnum",
-    header: "ROLL NUMBER",
+    header: "Roll Number",
   },
   {
     accessorKey: "year_of_admission",
-    header: "YEAR OF ADMISSION",
+    header: "Year Of Admission",
   },
   {
     accessorKey: "gender",
-    header: "GENDER",
+    header: "Gender",
   },
   {
     accessorKey: "branch",
-    header: "BRANCH",
+    header: "Branch",
   },
   {
     accessorKey: "student_type",
-    header: "STUDENT TYPE",
+    header: "Admission Type",
   },
   {
     id: "actions",

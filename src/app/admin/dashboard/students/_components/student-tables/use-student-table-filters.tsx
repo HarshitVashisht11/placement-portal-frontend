@@ -17,12 +17,12 @@ export const BRANCH_OPTIONS = [
   { value: "Civil Engineering", label: "CIV" },
 ];
 
-export const COUNTRY_OPTIONS = [
-  { value: "USA", label: "USA" },
-  { value: "INDIA", label: "INDIA" },
+export const ROLE_OPTIONS = [
+  { value: "MODERATOR", label: "Moderator" },
+  { value: "STUDENT", label: "Student" },
 ];
 
-export function useEmployeeTableFilters() {
+export function useStudentTableFilters() {
   const [searchQuery, setSearchQuery] = useQueryState(
     "q",
     searchParams.q
@@ -40,6 +40,11 @@ export function useEmployeeTableFilters() {
     searchParams.branch.withOptions({ shallow: false }).withDefault("")
   );
 
+  const [roleFiter, setRoleFilter] = useQueryState(
+    "role",
+    searchParams.role.withOptions({ shallow: false }).withDefault("")
+  );
+
   const [page, setPage] = useQueryState(
     "page",
     searchParams.page.withDefault(1)
@@ -48,14 +53,15 @@ export function useEmployeeTableFilters() {
   const resetFilters = useCallback(() => {
     setSearchQuery(null);
     setGenderFilter(null);
+    setRoleFilter(null);
     setBranchFilter(null);
 
     setPage(1);
-  }, [setSearchQuery, setGenderFilter, setBranchFilter, setPage]);
+  }, [setSearchQuery, setGenderFilter, setBranchFilter, setRoleFilter, setPage]);
 
   const isAnyFilterActive = useMemo(() => {
-    return !!searchQuery || !!genderFilter || !!branchFiter;
-  }, [searchQuery, genderFilter, branchFiter]);
+    return !!searchQuery || !!genderFilter || !!branchFiter || !!roleFiter;
+  }, [searchQuery, genderFilter, branchFiter, roleFiter]);
 
   return {
     searchQuery,
@@ -64,6 +70,8 @@ export function useEmployeeTableFilters() {
     setGenderFilter,
     branchFiter,
     setBranchFilter,
+    roleFiter,
+    setRoleFilter,
     page,
     setPage,
     resetFilters,

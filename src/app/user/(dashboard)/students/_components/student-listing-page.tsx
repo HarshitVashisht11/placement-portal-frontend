@@ -19,28 +19,26 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
   const gender = searchParamsCache.get("gender");
   const pageLimit = searchParamsCache.get("limit");
 
-    console.log("BRANCH", branch);
+  let data;
+  try {
+    const base = "/admin/user";
+    let url = base;
+    if (page > 1) {
+      if (url === base) {
+        url += "?page=" + page;
+      } else {
+        url += "&page=" + page;
+      }
+    }
 
-    let data;
-    try {
-        const base = "/admin/user";
-        let url = base;
-        if (page > 1) {
-            if (url === base) {
-                url += "?page=" + page;
-            } else {
-                url += "&page=" + page;
-            }
-        }
-
-        if (gender) {
-            let genderArgs = gender.split(".").join(",");
-            if (url === base) {
-                url += "?gender=" + genderArgs;
-            } else {
-                url += "&gender=" + genderArgs;
-            }
-        }
+    if (gender) {
+      let genderArgs = gender.split(".").join(",");
+      if (url === base) {
+        url += "?gender=" + genderArgs;
+      } else {
+        url += "&gender=" + genderArgs;
+      }
+    }
 
     if (branch) {
       let branchArgs = branch.split(".").join(",");
@@ -67,30 +65,30 @@ export default async function EmployeeListingPage({}: TEmployeeListingPage) {
   // const getStudentsData = async () => {
   // };
 
-    if (data == undefined) return null;
+  if (data == undefined) return null;
 
   const totalUsers = data.data.total_users ? data.data.total_users : 0;
   const employee: User[] = data.data.users ? data.data.users : [];
 
-    return (
-        <PageContainer scrollable>
-            <div className="space-y-4">
-                <div className="flex items-start justify-between">
-                    <Heading
-                        title={`Students (${totalUsers})`}
-                        description="Manage students (Server side table functionalities.)"
-                    />
+  return (
+    <PageContainer scrollable>
+      <div className="space-y-4">
+        <div className="flex items-start justify-between">
+          <Heading
+            title={`Students (${totalUsers})`}
+            description="Manage students (Server side table functionalities.)"
+          />
 
-                    <Link
-                        href={"/admin/dashboard/employee/new"}
-                        className={cn(buttonVariants({ variant: "default" }))}
-                    >
-                        <Plus className="mr-2 h-4 w-4" /> Add New
-                    </Link>
-                </div>
-                <Separator />
-                <EmployeeTable data={employee} totalData={totalUsers} />
-            </div>
-        </PageContainer>
-    );
+          <Link
+            href={"/admin/dashboard/employee/new"}
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add New
+          </Link>
+        </div>
+        <Separator />
+        <EmployeeTable data={employee} totalData={totalUsers} />
+      </div>
+    </PageContainer>
+  );
 }

@@ -51,7 +51,14 @@ auth_api.interceptors.response.use(
           }
           processQueue(null, newXcsrfToken);
         } catch (refreshError) {
+          console.log("Refresh token error", refreshError);
           processQueue(refreshError, null);
+
+          toast("Please login to continue");
+          if (typeof window !== "undefined") {
+            window.location.href = "/auth/login";
+          }
+
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;
@@ -67,13 +74,15 @@ auth_api.interceptors.response.use(
     }
 
     // Handle other errors
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && error.response.status === 400) {
       toast("Please login to continue");
-      if (typeof window !== "undefined") {
-        window.location.href = "/auth/login";
-      }
+      console.log("Please login to continue");
     } else if (error.response.status === 500) {
       toast.error("Oops! Something went wrong");
+    }
+
+    if (typeof window !== "undefined") {
+      window.location.href = "/auth/login";
     }
 
     return Promise.reject(error);

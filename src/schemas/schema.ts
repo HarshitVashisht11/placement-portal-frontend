@@ -1,5 +1,79 @@
 import * as z from "zod";
 
+const googleDriveLinkRegex = /^(https:\/\/)?(drive\.google\.com)/;
+
+export const StudentOnboardingSchema = z.object({
+  resumeLink: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+  marks10th: z.coerce
+    .number()
+    .min(1, "Please enter a valid mark or percentage")
+    .max(100, "Maximum allowed is 100")
+    .optional(),
+  sgpasem1: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpasem2: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpasem3: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpasem4: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpasem5: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  sgpasem6: z.coerce
+    .number()
+    .min(1, "Please enter a valid SGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  cgpa: z.coerce
+    .number()
+    .min(1, "Please enter a valid CGPA")
+    .max(10, "Maximum allowed is 10")
+    .optional(),
+  marks12th: z.coerce
+    .number()
+    .min(1, "Please enter a valid mark or percentage")
+    .max(100, "Maximum allowed is 100")
+    .optional(),
+  sgpaProofs: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+  collegeIdCard: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+  achievementCertificates: z
+    .string()
+    .min(1, "Please enter a valid link")
+    .url("Invalid URL")
+    .regex(googleDriveLinkRegex, "Must be a Google Drive link")
+    .optional(),
+});
+
 export const RegisterSchema = z.object({
   name: z.string().min(1, "Name is required").optional(),
   phone_number: z

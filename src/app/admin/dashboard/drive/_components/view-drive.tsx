@@ -1,6 +1,6 @@
 "use client";
 
-import ViewDrivePage from "@/components/ViewDrivePage";
+import AdminViewDrivePage from "@/components/AdminViewDrivePage";
 import { auth_api } from "@/lib/api";
 import { Branch } from "@/schemas/types";
 import { useParams } from "next/navigation";
@@ -41,7 +41,7 @@ const DrivePage = () => {
     return <div>Loading...</div>;
   }
 
-  return <ViewDrivePage driveData={drivedata} />;
+  return <AdminViewDrivePage driveData={drivedata} />;
 };
 
 export default DrivePage;
