@@ -11,6 +11,7 @@ export const searchParams = {
   q: parseAsString,
   gender: parseAsString,
   branch: parseAsString,
+  role: parseAsString,
   categories: parseAsString,
 };
 

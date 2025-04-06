@@ -4,15 +4,15 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
 import { DataTableSearch } from "@/components/ui/table/data-table-search";
-import { Employee } from "@/constants/data";
 import { columns } from "./columns";
 import {
   BRANCH_OPTIONS,
   GENDER_OPTIONS,
-  useEmployeeTableFilters,
-} from "./use-employee-table-filters";
+  ROLE_OPTIONS,
+  useStudentTableFilters,
+} from "./use-student-table-filters";
 
-export default function EmployeeTable({
+export default function StudentTable({
   data,
   totalData,
 }: {
@@ -24,12 +24,14 @@ export default function EmployeeTable({
     setGenderFilter,
     branchFiter,
     setBranchFilter,
+    roleFiter,
+    setRoleFilter,
     isAnyFilterActive,
     resetFilters,
     searchQuery,
     setPage,
     setSearchQuery,
-  } = useEmployeeTableFilters();
+  } = useStudentTableFilters();
 
   return (
     <div className="space-y-4 ">
@@ -53,6 +55,13 @@ export default function EmployeeTable({
           options={BRANCH_OPTIONS}
           setFilterValue={setBranchFilter}
           filterValue={branchFiter}
+        />
+        <DataTableFilterBox
+          filterKey="role"
+          title="Student Role"
+          options={ROLE_OPTIONS}
+          setFilterValue={setRoleFilter}
+          filterValue={roleFiter}
         />
         <DataTableResetFilter
           isFilterActive={isAnyFilterActive}

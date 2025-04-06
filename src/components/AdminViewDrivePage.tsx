@@ -1,18 +1,12 @@
 "use client";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   Download,
@@ -21,14 +15,12 @@ import {
   Banknote,
   Calendar,
   Milestone,
-  Terminal,
-  FileWarning,
-  AlertCircle,
+  ChevronDown,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "./ui/separator";
-import { auth_api } from "@/lib/api";
+import { api, auth_api } from "@/lib/api";
 import toast from "react-hot-toast";
 
 const attributes = [
@@ -55,36 +47,65 @@ const attributes = [
   { key: "resume", label: "Resume" },
 ];
 
-const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
+const AdminViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
   const [selectedRoleId, setSelectedRoleId] = useState<string>("");
   const [isApplied, setIsApplied] = useState<boolean>(false);
 
-  const [isTermsAndConditionsChecked, setIsTermsAndConditionsChecked] =
-    useState<boolean>(false);
+  const downloadAppliedStudentList = async (roleId: string) => {
+    // auth_api
+    //   .get(`/admin/drive/${driveData.id}/applied-students/${roleId}`)
+    //   .then((res) => {
+    //     const data = res.data;
+    //     const csv = data.map((row: any) =>
+    //       attributes.map((attr) => row[attr.key]).join(",")
+    //     );
+    //     csv.unshift(attributes.map((attr) => attr.label).join(","));
+    //     const csvContent = csv.join("\n");
+    //     const blob = new Blob([csvContent], { type: "text/csv" });
+    //     const url = URL.createObjectURL(blob);
+    //     const a = document.createElement("a");
+    //     a.href = url;
+    //     a.download = `${driveData.company.name}_drive_student_list.csv`;
+    //     a.click();
+    //     URL.revokeObjectURL(url);
+    //   })
+    //   .catch((err) => {
+    //     toast.error("Failed to download the file");
+    //   });
+    console.log(
+      "Downloading Applied Student List for Role: ",
+      roleId,
+      driveData.id
+    );
 
-  const handleRoleSelection = (roleId: string) => {
-    setSelectedRoleId(roleId);
-  };
-
-  const handleApply = async () => {
-    if (selectedRoleId) {
-      // API call logic goes here, passing selectedRoleId as the selected role
-      try {
-        const response = await auth_api.post("/user/drive", {
-          role_id: selectedRoleId,
-          drive_id: driveData.id,
-        });
-
-        if (response.status === 201) {
-          toast.success("Applied for drive successfully!");
-          setIsApplied(true);
+    try {
+      const response = await api.post(
+        "/jobs/drive/applicant",
+        {
+          required_data: driveData.required_data,
+        },
+        {
+          params: {
+            rid: roleId,
+            did: driveData.id,
+          },
+          responseType: "blob",
         }
-      } catch (error: any) {
-        console.error("Error applying for drive:", error.response.data);
-      }
-      console.log("Applying for role ID:", selectedRoleId);
-    } else {
-      alert("Please select a role before applying.");
+      );
+
+      // Create a link element to trigger the file download
+      const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = urlBlob;
+      const filename = driveData.company.name + "_" + driveData.roles.find((role) => role.id === roleId )?.title + "_applicants.csv";
+
+      link.setAttribute("download",
+                       filename); // Set the filename for download
+      document.body.appendChild(link);
+      link.click(); // Simulate click to download the file
+      document.body.removeChild(link); // Clean up after download
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
     }
   };
 
@@ -122,86 +143,38 @@ const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
               {new Date(driveData.deadline).toUTCString().slice(0, 22) + " IST"}
             </span>
           </div>
-          <Button disabled={isApplied || driveData.expired}>
-            <div className="bg-red-400 size-2 animate-pulse rounded-full mr-2"></div>
-            {driveData.expired
-              ? "Deadline Crossed"
-              : (isApplied && "Already Applied") ||
-                (!isApplied && (
-                  <AlertDialog>
-                    <AlertDialogTrigger>Apply</AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Read the below terms and conditions carefully.
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          <div>
-                            <hr/>
-                            <h3 className="my-2 text-black text-base">
-                              Below data will be sent to the company, please
-                              review.
-                            </h3>
-                            <ul className="text-black list-disc space-y-1 list-inside">
-                              {driveData.required_data.split(",").map((key) => (
-                                <li>
-                                  {
-                                    attributes.find((attr) => attr.key === key)
-                                      ?.label
-                                  }
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <Alert variant="default" className="my-4 border-black text-black">
-                            <AlertCircle className="animate-pulse h-4 w-4" />
-                            <AlertTitle>Heads Up!</AlertTitle>
-                            <AlertDescription>
-                                Before applying, please make sure you have
-                                updated all the fields required and have the
-                                right resume uploaded in your profile.
-                            </AlertDescription>
-                          </Alert>
-                          <hr/>
-                          <div>
-                            <p className="text-sm my-4 italic">
-                              * This action will apply you for this drive. Only
-                              those students who are genuinely interested in
-                              this opportunity and are willing to join should
-                              fill. We will not entertain any last minute drop
-                              out cases. This action cannot be undone.
-                            </p>
-                            <div className="space-x-2">
-                              <input
-                                type="checkbox"
-                                checked={isTermsAndConditionsChecked}
-                                onChange={() =>
-                                  setIsTermsAndConditionsChecked(
-                                    !isTermsAndConditionsChecked
-                                  )
-                                }
-                              />
-                              <span>
-                                I have read above terms and confirmed all my
-                                data.
-                              </span>
-                            </div>
-                          </div>
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          disabled={!isTermsAndConditionsChecked}
-                          onClick={handleApply}
-                        >
-                          Apply
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                ))}
-          </Button>
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button className="space-x-2">
+                <span>Applied Student List</span>
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-full">
+              <DropdownMenuLabel>Download for Role</DropdownMenuLabel>
+              {driveData.roles.map((role: Role) => (
+                <DropdownMenuItem
+                  onClick={() => {
+                    downloadAppliedStudentList(role.id);
+                  }}
+                >
+                  {role.title}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {/* <Button className="bg-green-500 text-black hover:bg-green-600 hover:text-white">
+            <a
+              href={driveData.job_description}
+              target="_blank"
+              rel="noreferrer noopener"
+              download={driveData.company.name + "_drive_student_list.csv"}
+              className="flex gap-2 items-center justify-center"
+            >
+              <span>Applied Student List</span>
+              <Download size={15} strokeWidth={3} />
+            </a>
+          </Button> */}
           <Button>
             <a
               href={driveData.job_description}
@@ -288,7 +261,6 @@ const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
               <table className="min-w-full mt-4 border-collapse border border-gray-300">
                 <thead>
                   <tr>
-                    <th className="px-4 py-2 border-b">Select</th>
                     <th className="px-4 py-2 border-b">Role Title</th>
                     <th className="px-4 py-2 border-b">Stipend</th>
                     <th className="px-4 py-2 border-b">Salary(LPA)</th>
@@ -300,31 +272,21 @@ const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
                       role.salary_low === 0 && role.salary_high === 0
                         ? "N.A."
                         : role.salary_low === role.salary_high
-                          ? role.salary_high
-                          : role.salary_low === 0
-                            ? role.salary_high
-                            : `${role.salary_low} - ${role.salary_high}`;
+                        ? role.salary_high
+                        : role.salary_low === 0
+                        ? role.salary_high
+                        : `${role.salary_low} - ${role.salary_high}`;
                     const stipend =
                       role.stipend_low === 0 && role.stipend_high === 0
                         ? "N.A."
                         : role.stipend_low === role.stipend_high
-                          ? role.stipend_high
-                          : role.stipend_low === 0
-                            ? role.stipend_high
-                            : `${role.stipend_low} - ${role.stipend_high}`;
+                        ? role.stipend_high
+                        : role.stipend_low === 0
+                        ? role.stipend_high
+                        : `${role.stipend_low} - ${role.stipend_high}`;
 
                     return role.id == selectedRoleId ? (
                       <tr key={role.id}>
-                        <td className="px-4 py-2 text-center">
-                          <input
-                            disabled={isApplied || driveData.expired}
-                            type="radio"
-                            name="selectedRole"
-                            value={role.id}
-                            checked={selectedRoleId === role.id}
-                            onChange={() => handleRoleSelection(role.id)}
-                          />
-                        </td>
                         <td className="px-4 py-2 text-center">{role.title}</td>
                         <td className="px-4 py-2 text-center">{stipend}</td>
                         <td className="px-4 py-2 text-center">{salary}</td>
@@ -332,19 +294,10 @@ const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
                     ) : (
                       <tr
                         key={role.id}
-                        className={`${isApplied ? "opacity-50 cursor-not-allowed" : ""
-                          }`}
+                        className={`${
+                          isApplied ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                       >
-                        <td className="px-4 py-2 text-center">
-                          <input
-                            disabled={isApplied || driveData.expired}
-                            type="radio"
-                            name="selectedRole"
-                            value={role.id}
-                            checked={selectedRoleId === role.id}
-                            onChange={() => handleRoleSelection(role.id)}
-                          />
-                        </td>
                         <td className="px-4 py-2 text-center">{role.title}</td>
                         <td className="px-4 py-2 text-center">{stipend}</td>
                         <td className="px-4 py-2 text-center">{salary}</td>
@@ -445,4 +398,4 @@ const ViewDrivePage = ({ driveData }: { driveData: DriveView }) => {
   );
 };
 
-export default ViewDrivePage;
+export default AdminViewDrivePage;

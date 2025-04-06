@@ -8,21 +8,40 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { api } from "@/lib/api";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface CellActionProps {
   data: User;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const ChangeUserRole = async () => {
+    try {
+      const response = await api.put(`/admin/user/role/` + data.id, {
+        role: data.role === "STUDENT" ? "MODERATOR" : "STUDENT",
+      });
+      if (response.status === 200) {
+        router.refresh();
+        toast.success("Role updated successfully");
+      } else {
+        toast.success("Something went wrong");
+        alert("Something went wrong");
+      }
+    } catch (error) {
+      toast.success("Something went wrong");
+      console.log(error);
+    }
+  };
 
+  const onConfirm = async () => {};
   return (
     <>
       <AlertModal
@@ -40,14 +59,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/dashboard/user/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
+          <DropdownMenuItem onClick={ChangeUserRole}>
+            <Edit className="mr-1 h-4 w-4" />{" "}
+            {data.role === "STUDENT"
+              ? "Promote to Moderator"
+              : "Cancel Moderator Role"}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
+            <Trash className="mr-1 h-4 w-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

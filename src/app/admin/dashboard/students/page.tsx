@@ -1,7 +1,7 @@
 import { searchParamsCache } from "@/lib/searchparams";
 import { SearchParams } from "nuqs/parsers";
 import React from "react";
-import EmployeeListingPage from "./_components/student-listing-page";
+import StudentListPage from "./_components/student-listing-page";
 
 type pageProps = {
   searchParams: SearchParams;
@@ -14,5 +14,5 @@ export const metadata = {
 export default async function Page({ searchParams }: pageProps) {
   searchParamsCache.parse(searchParams);
 
-  return <EmployeeListingPage />;
+  return <StudentListPage />;
 }
