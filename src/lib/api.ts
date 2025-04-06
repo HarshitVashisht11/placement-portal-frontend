@@ -74,7 +74,7 @@ auth_api.interceptors.response.use(
     }
 
     // Handle other errors
-    if (error.response.status === 401 && error.response.status === 400) {
+    if (error.response.status === 401 || error.response.status === 400) {
       toast("Please login to continue");
       console.log("Please login to continue");
     } else if (error.response.status === 500) {
