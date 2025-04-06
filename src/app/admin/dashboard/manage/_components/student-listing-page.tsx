@@ -6,19 +6,20 @@ import { searchParamsCache } from "@/lib/searchparams";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import StudentTable from "./student-tables";
+import EmployeeTable from "./employee-tables";
 import { api } from "@/lib/api";
 
-type TStudentListPage = {};
+type TEmployeeListingPage = {};
 
-export default async function StudentListPage({}: TStudentListPage) {
+export default async function EmployeeListingPage({ }: TEmployeeListingPage) {
   // Showcasing the use of search params cache in nested RSCs
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("q");
   const branch = searchParamsCache.get("branch");
   const gender = searchParamsCache.get("gender");
-  const role = searchParamsCache.get("role");
   const pageLimit = searchParamsCache.get("limit");
+
+  console.log("BRANCH", branch);
 
   let data;
   try {
@@ -50,15 +51,6 @@ export default async function StudentListPage({}: TStudentListPage) {
       }
     }
 
-    if (role) {
-      let roleArgs = role.split(".").join(",");
-      if (url === base) {
-        url += "?role=" + roleArgs;
-      } else {
-        url += "&role=" + roleArgs;
-      }
-    }
-
     if (search) {
       if (url === base) {
         url += "?q=" + search;
@@ -78,7 +70,7 @@ export default async function StudentListPage({}: TStudentListPage) {
   if (data == undefined) return null;
 
   const totalUsers = data.data.total_users ? data.data.total_users : 0;
-  const student: User[] = data.data.users ? data.data.users : [];
+  const employee: User[] = data.data.users ? data.data.users : [];
 
   return (
     <PageContainer scrollable>
@@ -90,14 +82,14 @@ export default async function StudentListPage({}: TStudentListPage) {
           />
 
           <Link
-            href={"/admin/dashboard/student/new"}
+            href={"/admin/dashboard/employee/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New
           </Link>
         </div>
         <Separator />
-        <StudentTable data={student} totalData={totalUsers} />
+        <EmployeeTable data={employee} totalData={totalUsers} />
       </div>
     </PageContainer>
   );

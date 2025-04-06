@@ -48,8 +48,6 @@ import { usePathname } from "next/navigation";
 import * as React from "react";
 import { Breadcrumbs } from "../breadcrumbs";
 import { Icons } from "../icons";
-import SearchInput from "../search-input";
-import ThemeToggle from "./ThemeToggle/theme-toggle";
 import { UserNav } from "./user-nav";
 
 export const company = {
